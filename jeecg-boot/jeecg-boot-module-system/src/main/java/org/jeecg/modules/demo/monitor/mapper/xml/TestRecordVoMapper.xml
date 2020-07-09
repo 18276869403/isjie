@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.TestRecordVoMapper">
+
+	<select id="queryTestAll"
+			resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+   SELECT
+   t.Id,t.Test_deviceImei testDeviceimei,t.T_status,t.Test_address testAddress,
+   d.Device_type,
+   case when t.Test_pv  = 0 then '-' else CONCAT(0+cast(t.Test_pv*d.Reduction_coefficient as char ),d.Unit) end as Test_pv,
+   t.Acquisition_time,
+   a1.Area_name oneAreaName,a2.Area_name twoAreaName,
+   c.`name`,c.Project_name,
+   CONCAT(d.Device_num,'/',d.Installation_position) as Device_num,
+   d.Detection_target,
+   CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,
+   d.Unit
+   from test_record t
+   LEFT JOIN device d on d.id = t.deviceId
+   LEFT JOIN customers c  on c.id = t.CustomerId
+   LEFT JOIN area a1 on a1.id = t.oneAreaId 
+   LEFT JOIN area a2 on a2.id = t.twoAreaId 
+   ${ew.customSqlSegment}
+
+   </select>
+
+	<select id="selectTestAll" resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo" >
+	SELECT dis.User_id,t.Id,f.Floor_name,t.Test_deviceImei,t.Test_address,t.T_status,
+		d.Device_type,
+		-- 	对pv值进行替换
+		case when t.Test_pv  = 0 then '-' else CONCAT(0+cast(t.Test_pv*d.Reduction_coefficient as char ),d.Unit) end as Test_pv,
+		t.Acquisition_time,
+		a1.Area_name oneAreaName,a2.Area_name twoAreaName,c.name,
+		d.Customer_id,
+		CONCAT(d.Device_num,'/',d.Installation_position) as Device_num,
+		d.Detection_target,
+		CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,d.Unit
+ 		FROM (
+		select Test_deviceImei,Test_address,max(Acquisition_time) as tt_time from test_record GROUP by Test_deviceImei,Test_address
+		) a inner JOIN test_record t
+		on a.tt_time = t.Acquisition_time and a.Test_address = t.Test_address and a.Test_deviceImei = t.Test_deviceImei
+		inner JOIN device d on
+		d.Device_imei = t.Test_deviceImei and
+		d.Address_number=t.Test_address
+		LEFT JOIN device_floorplan d2 on (d2.device_id=d.Id and d2.x_axis is not
+		null and d2.x_axis != '')
+		LEFT JOIN floor_plan
+		f on f.id=d2.floorPlan_id
+		LEFT JOIN customers c on c.id = d.Customer_id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id =c.Two_area_id
+		left join distribution dis on dis.Customer_id = c.id
+
+	${ew.customSqlSegment}
+	</select>
+	
+	
+
+	<select id="exportXlsTestAll"
+		resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+		select
+		case when f.Floor_name is null then '-' else f.Floor_name end as Floor_name,
+		f.id as floorId,
+		d.id as deviceId,
+		d.device_imei testDeviceimei,d.address_number testAddress,
+		d.status_type tstatus,
+		d.Device_type,
+		-- 	对pv值进行替换
+		case when d.backup2  is null then '-' when d.backup2 =0 then 0 else CONCAT(0+cast(d.backup2*d.Reduction_coefficient as char ),d.Unit) end as testPv,
+		d.BackUp1 acquisitionTime,
+		a1.Area_name
+		oneAreaName,a2.Area_name twoAreaName,c.name,
+		d.Customer_id,
+		-- 对设备编号进行替换
+		case when d.Installation_position != '' then  CONCAT(d.Device_num,'/',d.Installation_position) else d.Device_num end as Device_num,
+		case when d.Detection_target is null then '' else d.Detection_target end as Detection_target,
+		case when d.Ranges is null then '' else CONCAT(0+cast(d.Ranges as char),d.Unit) end as Ranges,d.Unit
+		,d.Device_model as deviceModel
+		from
+		device d
+		LEFT JOIN device_floorplan d2 on (d2.device_id=d.Id and d2.x_axis is not
+		null and d2.x_axis != '')
+		LEFT JOIN floor_plan
+		f on f.id=d2.floorPlan_id
+		LEFT JOIN customers c on c.id = d.Customer_id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id =c.Two_area_id
+		<!-- left join distribution dis on dis.Customer_id = c.id -->
+		${ew.customSqlSegment}
+
+	</select>
+
+
+	<!-- 分页查询实时记录 -->
+	<select id="queryTestByPage"
+			parameterType="org.jeecg.modules.demo.monitor.vo.TestRecordForPageVO"
+			resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+		SELECT
+		t.Id
+		FROM (
+		select Test_deviceImei,Test_address
+		<if test=" testDeviceImei == null || testDeviceImei == ''">
+			,max(id) as id
+		</if>
+		<if test=" testDeviceImei != null and testDeviceImei != ''">
+			,id
+		</if>
+		<if test=" testDeviceImei == null || testDeviceImei == ''">
+			,max(Acquisition_time) as Acquisition_time
+		</if>
+		<if test=" testDeviceImei != null and testDeviceImei != ''">
+			,Acquisition_time
+		</if>
+		from test_record
+		<where>
+			<if test="acquisitionTime_begin != null and acquisitionTime_begin != ''">
+				Acquisition_time &gt;= #{acquisitionTime_begin}
+			</if>
+			<if test="acquisitionTime_end != null and acquisitionTime_end != ''">
+				and Acquisition_time &lt;= #{acquisitionTime_end}
+			</if>
+
+		</where>
+		<if test=" testDeviceImei == null || testDeviceImei == ''">
+			GROUP by Test_deviceImei,Test_address
+		</if>
+		) t
+		inner JOIN device d on
+		d.Device_imei = t.Test_deviceImei and
+		d.Address_number=t.Test_address
+		left JOIN customers c on c.id = d.Customer_id
+		left JOIN area a1 on a1.id = c.One_area_id
+		left JOIN area a2 on a2.id =c.Two_area_id
+		<!-- left join distribution dis on dis.Customer_id = c.id -->
+		<where>
+			<if test="userId != null and  userId != ''">
+				<!-- dis.User_id = #{userId} -->
+				(
+					ifnull(d.device_area_id,'0')  in( 
+						select '0' union
+						select a.customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+					and d.Customer_id in(
+						select dr.Customer_id from distribution a
+						left join device dr on a.customer_id = dr.device_area_id
+						where a.user_id = #{userId}
+						
+						union
+						
+						select a.Customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+				)
+			</if>
+			<if test="customerId != null and customerId != ''">
+				and c.id = #{customerId}
+			</if>
+			<if test="deviceType != null and deviceType != ''">
+				and d.Device_type = #{deviceType}
+			</if>
+			<if test="deviceNum != null and deviceNum != ''">
+				and d.Device_num like #{deviceNum}
+			</if>
+			<if test="oneAreaId != null ">
+				and c.One_area_id = #{oneAreaId}
+			</if>
+			<if test="twoAreaId != null ">
+				and c.Two_area_id = #{twoAreaId}
+			</if>
+
+			<if test=" testDeviceImei != null and testDeviceImei != ''">
+				and d.Device_imei = #{testDeviceImei}
+			</if>
+			<if test="testAddress != null and testAddress != ''">
+				and d.Address_number= #{testAddress}
+			</if>
+			<!--<if test=" iccid != null and iccid != ''">-->
+			<!--and d.Iccid = #{iccid}-->
+			<!--</if>-->
+		</where>
+		<if test=" testDeviceImei == null || testDeviceImei == ''">
+			GROUP BY d.Device_imei,d.Address_number
+		</if>
+		order by t.id desc,d.Device_num desc
+		limit #{pageNo},#{pageSize}
+	</select>
+
+	<select id="queryTestByPage1" resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+	SELECT
+	case when f.Floor_name is null then '-' else f.Floor_name end as Floor_name,
+		f.id as floorId,
+		d.id as deviceId,
+		t.Test_deviceImei,t.Test_address,d.status_type tstatus,
+		d.Device_type,
+		-- 	对pv值进行替换
+		case when t.Test_pv is null then '-' when t.Test_pv=0 then 0  else CONCAT(0+cast(t.Test_pv*d.Reduction_coefficient as char ),d.Unit) end as testPv,
+		t.Acquisition_time acquisitionTime,
+		a1.Area_name
+		oneAreaName,a2.Area_name twoAreaName,c.name,
+		d.Customer_id,
+		-- 对设备编号进行替换
+		case when d.Installation_position != '' then  CONCAT(d.Device_num,'/',d.Installation_position) else d.Device_num end as Device_num,
+		case when d.Detection_target is null then '' else d.Detection_target end as Detection_target,
+		case when d.Ranges is null then '' else CONCAT(0+cast(d.Ranges as char),d.Unit) end as Ranges,d.Unit
+		,d.Device_model as deviceModel
+	from test_record t
+	inner JOIN device d on
+	d.Device_imei = t.Test_deviceImei and
+	d.Address_number=t.Test_address
+	left JOIN device_floorplan d2 on (d2.device_id=d.Id and d2.x_axis is not
+		null and d2.x_axis != '')
+		left JOIN floor_plan f on f.id=d2.floorPlan_id
+	inner JOIN customers c on c.id = d.Customer_id
+	inner JOIN area a1 on a1.id = c.One_area_id
+	inner JOIN area a2 on a2.id =
+	c.Two_area_id WHERE t.id=#{tid} limit 0,1
+	</select>
+	<select id="queryTestByPage3"
+			parameterType="org.jeecg.modules.demo.monitor.vo.TestRecordForPageVO"
+			resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+		SELECT
+		case when f.Floor_name is null then '-' else f.Floor_name end as Floor_name,
+		f.id as floorId,
+		d.id as deviceId,
+		d.device_imei testDeviceimei,d.address_number testAddress,
+		d.status_type tstatus,
+		d.Device_type,
+		-- 	对pv值进行替换
+		case when d.backup2  is null then '-' when d.backup2 =0 then 0 else CONCAT(0+cast(cast(d.backup2*d.Reduction_coefficient as decimal(18,2)) as char ),ifnull(d.Unit,'')) end as testPv,
+		d.BackUp1 acquisitionTime,
+		a1.Area_name
+		oneAreaName,a2.Area_name twoAreaName,c.name,
+		d.Customer_id,
+		-- 对设备编号进行替换
+		case when d.Installation_position != '' then  CONCAT(d.Device_num,'/',d.Installation_position) else d.Device_num end as Device_num,
+		case when d.Detection_target is null then '' else d.Detection_target end as Detection_target,
+		case when d.Ranges is null then '' else CONCAT(0+cast(d.Ranges as char),d.Unit) end as Ranges,d.Unit
+		,d.Device_model as deviceModel
+		from device d
+		left JOIN device_floorplan d2 on (d2.device_id=d.Id and d2.x_axis is not
+		null and d2.x_axis != '')
+		left JOIN floor_plan f on f.id=d2.floorPlan_id
+		left JOIN customers c on c.id = d.Customer_id
+		left JOIN area a1 on a1.id = c.One_area_id
+		left JOIN area a2 on a2.id =c.Two_area_id
+		<!-- left join distribution dis on dis.Customer_id = c.id -->
+		<where>
+			<if test="userId != null and  userId != ''">
+				<!-- dis.User_id = #{userId} -->
+				(
+					(
+						ifnull(d.device_area_id,'0')  in( 
+							select '0' union
+							select a.customer_id from distribution a
+							where a.user_id = #{userId}
+						)
+						and d.Customer_id in(
+							select dr.Customer_id from distribution a
+							left join device dr on a.customer_id = dr.device_area_id
+							where a.user_id = #{userId}
+							
+							union
+							
+							select a.Customer_id from distribution a
+							where a.user_id = #{userId}
+						)
+					)
+				)
+			</if>
+			<if test="customerId != null and customerId != ''">
+				and c.id = #{customerId}
+			</if>
+			<if test="deviceType != null and deviceType != ''">
+				and d.Device_type = #{deviceType}
+			</if>
+			<if test="deviceNum != null and deviceNum != ''">
+				and d.Device_num like #{deviceNum}
+			</if>
+			<if test="oneAreaId != null ">
+				and c.One_area_id = #{oneAreaId}
+			</if>
+			<if test="twoAreaId != null ">
+				and c.Two_area_id = #{twoAreaId}
+			</if>
+			<if test="testAddress != null ">
+				and d.Address_number like #{testAddress}
+			</if>
+			<if test="detectionTarget != null ">
+				and d.Detection_target like #{detectionTarget}
+			</if>
+			<if test="tstatus != null ">
+				and d.status_type like #{tstatus}
+			</if>
+		</where>
+		GROUP BY d.device_imei,d.address_number
+		order by d.BackUp1 desc,d.Device_num desc
+		limit #{pageNo},#{pageSize}
+	</select>
+
+	<!--查询总数量-->
+	<select id="findCount"
+			parameterType="org.jeecg.modules.demo.monitor.vo.TestRecordForPageVO"
+			resultType="java.lang.Integer">
+		 select count(*) from test_record
+		 where Test_deviceImei = #{testDeviceImei} and Test_address= #{testAddress}
+
+	</select>
+
+</mapper>

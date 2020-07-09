@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>是杰安全云</title>
+	<link rel="stylesheet" href="./css/data.css">
+	<link rel="stylesheet" href="./css/common.css">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+<!--	<link rel="stylesheet" type="text/css" href="js/skin/jebox.css" />-->
+	<link rel="stylesheet" type="text/css" href="js/skin/jebox.1.css" />
+		
+		<script src="./js/request.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="./qlib/szqbl.juicer.min.js"></script>
+	<script src="./layui/layui.js"></script>
+	<script src="./js/quanxianrenzheng.js"></script>
+	<script src="./js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/skin/jebox/jquery-1.7.2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/jquery.liMarquee.js"></script>
+	<script src="js/skin/jebox/jquery.jebox.js" type="text/javascript" charset="utf-8"></script>
+	<!-- <script src="./js/jquery-3.4.1.min.js"></script>
+    <script src="./js/date/jquery-1.11.3.min.js"></script> -->
+	<script src="./js/date/foundation-datepicker.js"></script>
+	<link rel="stylesheet" href="./css/foundation-datepicker.css">
+	<script src="./js/date/foundation-datepicker.zh-CN.js"></script>
+	<script src="./js/sPage/jquery.sPage.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/sPage/jquery.sPage.css" />
+	<link rel="stylesheet" type="text/css" href="css/layerContent.css" />
+	<script src="js/sshj.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		$(function(){
+		    timestamps = setInterval(function () {
+		        loadRec();
+		    }, 5000);
+			var isAdmin = localStorage.getItem("isAdmin");
+			var OneId = document.getElementById("titleOne");
+
+			if (isAdmin == 1) {
+				OneId.style.display = "block";
+			} else {
+				// $("titleOne").hide();
+				OneId.style.display = "none";
+			}
+		});
+	</script>
+
+
+	<style>
+		#titleOne{
+			border: 0px;
+			margin: 0 auto;
+			margin-top: 5px;
+			width: 100px;
+		}
+		.main {
+			min-width: 100%;
+			min-height: 800px;
+			overflow: hidden;
+		}
+
+		#pagenumber {
+			display: inline-block;
+			width: 30px;
+			height: 15px;
+			text-align: center;
+			line-height: 11px;
+			border: 1px solid #fff;
+			font-size: 12px;
+			color: #fff;
+		}
+		/*背景层*/
+		#popLayer {
+			display: none;
+			/*background-color: #B3B3B3;*/
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 10;
+			-moz-opacity: 0.8;
+			opacity:.80;
+			filter: alpha(opacity=80);/* 只支持IE6、7、8、9 */
+		}
+
+		/*弹出层*/
+		#popBox {
+			display: none;
+			background-color: #FFFFFF;
+			z-index: 11;
+			width: 180px;
+			height: 130px;
+			position:fixed;
+			top:0;
+			right:0;
+			left:0;
+			bottom:0;
+			margin:auto;
+			border-radius: 5px;
+		}
+		.con {
+			color: #757575;
+			margin: 35px 0px 0px 30px;
+		}
+		.close {
+			width: 30px;
+		}
+		/*关闭按钮*/
+		.closebtn {
+			width: 70px;
+			height: 30px;
+			border-radius: 5px;
+			color: #fdfdfd;
+			background-color: #3b78ff;
+			font-size: 15px;
+			margin: 85px -60px;
+		}
+		#user_xiala {
+			width: 150px;
+			height: 100px;
+			position: absolute;
+			top: 60px;
+			right: 20px;
+			background-color: #f7f7f7;
+			z-index: 1000;
+			display: none;
+		}
+		#xiala1 {
+			height: 50%;
+		}
+		#xiala1:hover {
+			background-color: #eaeaea;
+			cursor: pointer;
+		}
+		#xiala2 {
+			border-top: 1px solid #dfdfdf;
+			height: 50%;
+		}
+		#xiala2:hover {
+			background-color: #eaeaea;
+			cursor: pointer;
+		}
+		.xiala_span {
+			color: black;
+			margin-left: 45px;
+		}
+		.content_input {
+			margin-top: 25px;
+		}
+		#tanchuang::-webkit-scrollbar {
+			display: none;/*隐藏滚动条*/
+		}
+		.input {
+			border: 1px solid darkgrey;
+		}
+		.table1 a{
+			color: #fff;
+			text-decoration: underline;
+			cursor: pointer;
+		}
+		.table1 tr td{
+			overflow:hidden;
+			white-space:nowrap;
+			text-overflow: ellipsis;
+		}
+		.analytics-img{
+			width: 30px;
+			height:30px;
+			margin-left:5px;
+			margin-top:-10px;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="css/layerContent.css" />
+</head>
+
+<body>
+<div class="main">
+	<div id="" style="position: relative;height: 60px;width: 100%;background-color: #000000;z-index: 99999;">
+		<img src="img/logo.jpg" style="margin-top: 10px;margin-left: 20px;float: left;width:40px;height:40px;"
+			 id="logo">
+		<div id="logoText" style="float: left;font-size: 16px;color: #FFFFFF;line-height: 60px;margin-left: 10px;">
+			是杰安全云
+		</div>
+		<div id="all"
+			 style="float: left;color: #FFFFFF;font-size: 16px;line-height: 60px;width: 24%;text-align: center;margin-left: 27%;">
+			<div onclick="heade()" id="sy" style="width: 33.33%;float: left;">
+				首页
+			</div>
+			<div onclick="jilu()" id="ssjl" style="width: 33.33%;float: left;background-color: #1d4555;">
+				实时列表
+			</div>
+			<div onclick="alarm()" id="bjjl" style="width: 33.33%;float: left;">
+				历史记录
+			</div>
+		</div>
+
+		<div id="user_data_floor"
+			 style="float: right;color: #FFFFFF;line-height: 60px;font-size: 15px;margin-right: 20px;">
+			<img onclick="logout()" src="img/shezhi@1x.png" style="margin-top: 16px;margin-left: 8px;float: right;">
+			<!--下拉(修改密码/退出登录)-->
+			<div id="user_xiala">
+				<div id="xiala1" onclick="logout2()"><span class="xiala_span">修改密码</span></div>
+				<div id="xiala2" onclick="logout1()"><span class="xiala_span">退出登录</span></div>
+			</div>
+			<span id="">
+					当前登陆用户:<span style="margin: 0px 10px;" id="name_data_floor">
+					</span>
+			</span>
+		</div>
+	</div>
+
+	<div class="line"></div>
+
+	<!-- <div class="search" id="search1">
+		<div class="type fl" id="">
+			<div style="float: left;" class="companyname">份:</div>
+			<div id="khname_a" class="companyname fl"></div>
+		</div>
+		<div class="type fl" id="" style="margin-left: 30px;">
+			<div style="float: left;" class="companyname">市:</div>
+			<div id="khname_b" class="companyname fl"></div>
+		</div>
+		<div class="type fl" id="" style="margin-left: 30px;">
+			<div style="float: left;" class="companyname">客户:</div>
+			<div id="khname_c" class="companyname fl"></div>
+		</div>
+
+		<div class="type fl">
+			<span>设备类型</span>
+			<select style="color: white;background-color: #0a2336;" name="" id="deviceType">
+				<option value="">全部</option>
+				<option value="1" attr="探测器">探测器</option>
+				<option value="2" attr="控制器">控制器</option>
+				<option value="3" attr="输出模块">输出模块</option>
+			</select>
+		</div>
+		<div class="date fl">
+			<span class="fl">设备编号</span>
+			<input style="color: #fff;width: 130px;font-size: 14px;" type="text" class="fl" id="deviceNum">
+		</div>
+		<div id="testtime2" class="date fl">
+			<span id="oo" class="fl">采集时间1&nbsp;</span>
+			<input style="color: #fff;width: 130px;font-size: 14px;" type="text" class="fl" id="startTime">
+			<span class="connectline fl"></span>
+			<input style="color: #fff;width: 130px; font-size: 14px;" type="text" class="fl" id="endTime">
+		</div>
+		<div class="chaxun fl">
+			<button onclick="selectbutton()" style="color:white; font-size: 14px;">查询</button>
+		</div>
+		<div class="export fl">
+			<button onclick="exporttoexel()" style="color:white; font-size: 14px;">EXCEL导出</button>
+		</div>
+	</div> -->
+
+	<div class="search" id="search2">
+		<div id="khname_a" class="companyname fl "></div>
+		<div class="fl singleDeviceText">单设备历史数据：</div>
+		<div class="type fl singleDevice" id="">
+			<span>省</span>
+			<select name="" id="prolist" onchange="gradeChange()" style="background-color: #0a2336;">
+			</select>
+		</div>
+		<div class="type fl singleDevice" id="" onchange="cityChange()">
+			<span>市</span>
+			<select name="" id="citylist" style="background-color: #0a2336;">
+
+			</select>
+		</div>
+		<div class="type fl singleDevice" id="">
+			<span>客户</span>
+			<select name="" id="khlist" style="background-color: #0a2336;width: 130px;">
+			</select>
+		</div>
+
+		<div class="type fl singleDevice">
+			<span>设备类型</span>
+			<select style="color: white;background-color: #0a2336; " name="" id="deviceType">
+				<option value="">全部</option>
+				<option value="1" attr="探测器">探测器</option>
+				<option value="2" attr="控制器">控制器</option>
+				<option value="3" attr="输出模块">输出模块</option>
+			</select>
+		</div>
+		<div class="date fl singleDevice">
+			<span class="fl">设备编号</span>
+			<input style="color: #fff;width: 60px;font-size: 14px;" type="text" class="fl" id="deviceNum">
+		</div>
+		<div class="date fl singleDevice">
+			<span class="fl">设备ADD</span>
+			<input style="color: #fff;width: 50px;font-size: 14px;" type="text" class="fl" id="testAddress">
+		</div>
+		<div class="date fl singleDevice">
+			<span class="fl">检测目标</span>
+			<input style="color: #fff;width: 60px;font-size: 14px;" type="text" class="fl" id="detectionTarget">
+		</div>
+		<div class="date fl">
+			<span class="fl">状态</span>
+			<input style="color: #fff;width: 60px;font-size: 14px;" type="text" class="fl" id="tstatus">
+		</div>
+		<div id ="testtime" class="date fl">
+			<span class="fl">采集时间&nbsp;</span>
+			<input autocomplete="off" style="color: #fff;width: 75px;font-size: 14px;" type="text" class="fl" id="startTime">
+			<span class="connectline fl"></span>
+			<input autocomplete="off" style="color: #fff;width: 75px; font-size: 14px;" type="text" class="fl" id="endTime">
+		</div>
+		<!-- <div class="chaxun fl">
+                <button>查询</button>
+            </div> -->
+		<div class="chaxun fl">
+			<button onclick="selectbutton()" style="color:white; font-size: 14px;">查询</button>
+		</div>
+		<div class="export fl">
+			<button class="excelExport" style="color:white; font-size: 14px;" onclick="exporttoexel()">EXCEL导出</button>
+		</div>
+	</div>
+	<div class="data fl " style="clear: both;">
+		<!-- <div id="divtable" style="height: 720px;"> -->
+		<table class="table1">
+			<thead>
+				<th id="titleOne">客户名称</th>
+				<th style="width: 8%;">楼层名称</th>
+				<th style="width: 15%;">设备类型/型号</th>
+				<th style="width: 15%;">设备编号/位置</th>
+				<th style="width: 6%;">设备ADD</th>
+				<th style="width: 8%;">检测目标</th>
+				<th style="width: 7%;">量程</th>
+				<th style="width: 7%;">状态</th>
+				<th style="width: 5%;">数值</th>
+				<th style="width: 13%;">采集时间</th>
+				<th style="width: 50px"></th>
+			</thead>
+			<tbody id="tbodydata" style="">
+			</tbody>
+		</table>
+
+		<!-- </div> -->
+		<!--点击编号/位置弹出提示框-->
+		<div id="popLayer"></div>
+		<div id="popBox">
+			<div class="close">
+				<button Onclick="closeBox()" class="closebtn">关闭</button>
+			</div>
+			<p class="con">当前设备未布置</p>
+		</div>
+
+		<div id="myPage" class="demo"></div>
+		
+		<div id="" style="color: #FFFFFF;float: right;margin-top: 10px;display: none">
+			<div id="" style="float: left;">
+					<span id="" onclick="pageup()" style="cursor: pointer;">
+						上一页
+					</span>
+				<span id="currentpage">
+						1
+					</span>
+				<span id="">/</span>
+				<span id="pageall">
+						1
+					</span>
+				<span id="" onclick="pagedown()" style="cursor: pointer;">
+						下一页
+					</span>
+			</div>
+			<input type="" name="" id="topage" value=""
+				   style="color: #FFFFFF;border: 1px solid #FFFFFF;width: 50px;float: left;" />
+			<button type="button" style="color: #FFFFFF;float: left;" onclick="sure()">跳转</button>
+		</div>
+		<!-- <div class="paging">
+            <div class="fr">
+                <span style="font-size: 12px;">1</span><span>-</span><span style="font-size: 12px;">8</span>
+                <span style="font-size: 12px;">共8条</span>
+                <input id="pagenumber" type="text">
+                <select name="" id=""
+                    style="width: 60px;height:15px;line-height: 11px;font-size: 12px;color: #b6bec3;">
+                    <option value="">10/页</option>
+                </select>
+            </div>
+        </div> -->
+	</div>
+	<div class="fl rightline">
+		<div class="linechart" >
+			<div class="callNumberTitle">7天报警次数</div>
+			<div class="callNumberdate"></div>
+			<div id="callNumberLine" style="width: 100%;height:200px;margin-left: 10px;"></div>
+		</div>
+
+		<div class="topten" style="margin-top: 50px;">
+			<div class="callNumberTitle" id="chartTitle">当天设备报警</div>
+			<div class="callNumberdate"></div>
+			<div id="toptenLine" style="width: 100%;height:320px;margin-left: 10px;"></div>
+		</div>
+	</div>
+
+</div>
+<script>
+	var user = JSON.parse(localStorage.getItem("user"));
+	var isAdmin = localStorage.getItem("isAdmin");
+	 
+	if (isAdmin == 0) {
+		$("#search1").show();
+		$("#search2").hide();
+		$("#user_data_floor").find("span[id=name_data_floor]").text(user.customerName)
+		$("#logo").attr("src", requestConf.domain + "sys/common/view/" + user.customerLogo)
+		$("#logoText").html(user.webName)
+		document.getElementById("khname_c").innerText = user.customerName
+		document.getElementById("khname_a").innerText = user.oneAreaName
+		document.getElementById("khname_b").innerText = user.twoAreaName
+	} else {
+		// $("#user_data_floor").find("span[id=name_data_floor]").text(user.userInfo.realname)
+		$("#user_data_floor").find("span[id=name_data_floor]").text(user.customerName)
+		if(user.logo && !requestConf.forceLogo){
+			$("#logo").attr("src", requestConf.domain + "sys/common/view/" + user.logo)
+			$("#logoText").html(user.webName)
+		} else {
+			$("#logo").attr("src", requestConf.logoImg);
+			$("#logoText").html(requestConf.logoText);
+		}
+		$("#search1").hide();
+
+		$("#search2").show();
+	}
+	//var isAdmin = localStorage.getItem("isAdmin");
+	// document.getElementById("khname_a").innerText = localStorage.getItem("kh_name")
+
+	function jilu() {
+		console.log("jilu")
+		document.getElementById("ssjl").style.backgroundColor = "#1d4555"
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = ""
+		window.location.href = "data-floor.html"
+		localStorage.removeItem("deviceType")
+		localStorage.removeItem("sbdz")
+		localStorage.removeItem("testDeviceImei")
+		localStorage.removeItem("addressobj")
+	}
+
+	function heade() {
+		console.log("head")
+		localStorage.removeItem("sbdz")
+		localStorage.removeItem("deviceImei")
+		document.getElementById("bjjl").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("sy").style.backgroundColor = "#1d4555"
+		window.location.href = "louceng.html"
+	}
+
+	function alarm() {
+		console.log("alarm")
+		localStorage.removeItem("sbdz")
+		localStorage.removeItem("deviceImei")
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = "#1d4555"
+		window.location.href = "call.html"
+	}
+	$("#check_all").click(function () { //鼠标点击事件
+		$(".check_item").prop("checked", $(this).prop("checked")) //所有类为check_item的属性打√
+		//选中的时候返回true，否则为false
+		//使得id为check_all的原生属性值与class为check_item的保持一致
+	});
+	$(document).on("click", ".check_item", function () { //对class绑定一个点击事件
+		var flag = $(".check_item:checked").length == $(".check_item").length;
+		//如果选中的框数等于总框数的，那么flag的结果返回true
+		$("#check_all").prop("checked", flag)
+		//这时候让id为check_all，也就是全选按钮也为true，那么全选按钮也就打√了
+	})
+
+	// 基于准备好的dom，初始化echarts实例  报警次数
+
+	// 指定图表的配置项和数据
+	function initoption(xAxis, sb1, sb2, sb3) {
+		console.log("初始化")
+		var myChart = echarts.init(document.getElementById('callNumberLine'));
+		var arrDate = xAxis;
+		var option = {
+			height:150,
+			backgroundColor: '', //背景颜色透明
+			tooltip: {
+				trigger: 'axis', //鼠标经过提示
+			},
+
+			grid: {
+				left: 0,
+				top: '5%',
+				left: 0,
+				bottom: '5%',
+				containLabel: true
+			},
+
+			xAxis: {
+				name:'',
+				type: 'category',
+				nameTextStyle:{
+					fontSize: 16,
+					color:"white",
+				},
+
+				data: xAxis,
+				splitNumber: 1,
+				show: true, //隐藏x轴
+				axisLabel: {
+					interval: 0,
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			yAxis: [
+				{
+					type: 'value',
+					name:'上面y轴',
+					nameTextStyle:{
+						fontSize: 16,
+						color:"white",
+					},
+					splitLine: {
+						show: false,
+
+					}, //去除网格线
+					show: true, //隐藏y轴,
+					axisLabel: {
+						textStyle: {
+							color: '#a2a5b0'
+						}
+					}
+				}
+			],
+			// color: ['#1DB0B8', '#37C6C0', '#D0E9FF', '#c7353a', '#f5b91e'],
+			series: [{
+				name: '探测器',
+				type: 'line',
+				itemStyle: {
+					normal: {
+						color: '#3b78ff',
+
+					},
+					emphasis: {
+						color: 'red',
+						lineStyle: { // 系列级个性化折线样式
+							width: 2,
+							type: 'dotted',
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								offset: 0,
+								color: 'green'
+							}, {
+								offset: 1,
+								color: '#3b78ff'
+							}])
+						}
+					}
+				}, //线条样式
+				areaStyle: {
+					normal: {
+						//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+							offset: 0,
+							color: 'rgba(49,95,199,1)'
+						}, {
+							offset: 0.34,
+							color: 'rgba(49,95,199,0.55)'
+						}, {
+							offset: 1,
+							color: 'rgba(49,95,199,0.0)'
+						}])
+
+					}
+				}, //区域颜色渐变
+				data: sb1
+			},
+				{
+					name: '控制器',
+					type: 'line',
+					itemStyle: {
+						normal: {
+							color: '#fa5656',
+
+						},
+						emphasis: {
+							color: '#008B45',
+							lineStyle: { // 系列级个性化折线样式
+								width: 2,
+								type: 'dotted',
+								color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+									offset: 0,
+									color: '#00FFFF'
+								}, {
+									offset: 1,
+									color: '#fa5656'
+								}])
+							}
+						}
+					}, //线条样式
+					areaStyle: {
+						normal: {
+							//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+
+								offset: 0,
+								color: 'rgba(228,81,80,1)'
+							}, {
+								offset: 0.34,
+								color: 'rgba(228,81,80,0.55)'
+							}, {
+								offset: 1,
+								color: 'rgba(228,81,80,0.00)'
+							}])
+
+						}
+					}, //区域颜色渐变
+					data: sb2
+				},
+				{
+					name: '输出模块',
+					type: 'line',
+					itemStyle: {
+						normal: {
+							color: '#fbc82a',
+
+						},
+						emphasis: {
+							color: '#6A5ACD',
+							lineStyle: { // 系列级个性化折线样式
+								width: 2,
+								type: 'dotted',
+								color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+									offset: 0,
+									color: '#1E90FF'
+								}, {
+									offset: 1,
+									color: '#fbc82a'
+								}])
+							}
+						}
+					}, //线条样式
+					areaStyle: {
+						normal: {
+							//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								offset: 0,
+								color: 'rgba(224,180,41,1)'
+							}, {
+								offset: 0.34,
+								color: 'rgba(224,180,41,0.35)'
+							}, {
+								offset: 1,
+								color: 'rgba(224,180,41,0.00)'
+							}])
+
+						}
+					}, //区域颜色渐变
+					data: sb3
+				}
+			],
+			legend:{
+				textStyle: { //图例文字的样式
+					color: '#fff',
+					fontSize: 16
+				},
+				data:['探测器','控制器','输出模块'],
+				bottom: '-3%' , //垂直方向位置
+				icon: "circle",
+				itemWidth: 10,  // 设置宽度
+				itemHeight: 10, // 设置高度
+				itemGap: 40 // 设置间距
+			},
+		};
+		myChart.setOption(option);
+	}
+
+	function dat1(y, x,xi) {
+		console.log("初始化")
+		var myChart = echarts.init(document.getElementById('toptenLine'));
+
+		var option = {
+			height: 150,
+			backgroundColor: '', //背景颜色透明
+			tooltip: {
+				trigger: 'axis', //鼠标经过提示
+			},
+
+			grid: {
+				left: 0,
+				top: '7px',
+				left: 0,
+				bottom: '0',
+				containLabel: true
+			},
+			legend:{
+				textStyle: { //图例文字的样式
+					color: '#fff',
+					fontSize: 16
+				},
+				data:xi,
+				icon: "circle",
+				bottom:'-1%',
+				itemWidth: 10,  // 设置宽度
+				itemHeight: 10, // 设置高度
+				itemGap: 10 ,// 设置间距
+			},
+			xAxis: {
+				type: 'category',
+				name:'',
+				nameTextStyle:{
+					color:"white",
+					fontSize: 16
+				},
+
+				color:['#fff'],
+				data: x,
+				show: true, //隐藏x轴
+				splitNumber: 1,
+				axisLabel: {
+					interval: 0,
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			yAxis: {
+				type: 'value',
+				name:'',
+
+				nameTextStyle:{
+					color:"white",
+					fontSize: 16
+				},
+				splitLine: {
+					show: false,
+
+				}, //去除网格线
+				show: true, //隐藏y轴,
+				axisLabel: {
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			// color: ['#1DB0B8', '#37C6C0', '#D0E9FF', '#c7353a', '#f5b91e'],
+			series: y
+		};
+		myChart.setOption(option);
+	}
+
+
+	function initoption2(xAxis, data_, type) {
+		console.log("初始化")
+		var seltype = ""
+		let type1 = {
+			name: '探测器',
+			type: 'line',
+			itemStyle: {
+				normal: {
+					color: '#3b78ff',
+
+				},
+				emphasis: {
+					color: 'red',
+					lineStyle: { // 系列级个性化折线样式
+						width: 2,
+						type: 'dotted',
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+							offset: 0,
+							color: 'green'
+						}, {
+							offset: 1,
+							color: '#3b78ff'
+						}])
+					}
+				}
+			}, //线条样式
+			areaStyle: {
+				normal: {
+					//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+
+						offset: 0,
+						color: 'rgba(49,95,199,1)'
+					}, {
+						offset: 0.34,
+						color: 'rgba(49,95,199,0.55)'
+					}, {
+						offset: 1,
+						color: 'rgba(49,95,199,0.0)'
+					}])
+
+				}
+			}, //区域颜色渐变
+			data: data_
+		};
+		let type2 = {
+			name: '控制器',
+			type: 'line',
+			itemStyle: {
+				normal: {
+					color: '#fa5656',
+
+				},
+				emphasis: {
+					color: '#008B45',
+					lineStyle: { // 系列级个性化折线样式
+						width: 2,
+						type: 'dotted',
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+							offset: 0,
+							color: '#00FFFF'
+						}, {
+							offset: 1,
+							color: '#fa5656'
+						}])
+					}
+				}
+			}, //线条样式
+			areaStyle: {
+				normal: {
+					//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+
+						offset: 0,
+						color: 'rgba(228,81,80,1)'
+					}, {
+						offset: 0.34,
+						color: 'rgba(228,81,80,0.55)'
+					}, {
+						offset: 1,
+						color: 'rgba(228,81,80,0.00)'
+					}])
+
+				}
+			}, //区域颜色渐变
+			data: data_
+		};
+		let type3 = {
+			name: '输出模块',
+			type: 'line',
+			itemStyle: {
+
+				normal: {
+					color: '#fbc82a',
+
+				},
+				emphasis: {
+					color: '#6A5ACD',
+					lineStyle: { // 系列级个性化折线样式
+						width: 2,
+						type: 'dotted',
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+							offset: 0,
+							color: '#1E90FF'
+						}, {
+							offset: 1,
+							color: '#fbc82a'
+						}])
+					}
+				}
+			}, //线条样式
+			areaStyle: {
+				normal: {
+					//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+					color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+
+						offset: 0,
+						color: 'rgba(224,180,41,1)'
+					}, {
+						offset: 0.34,
+						color: 'rgba(224,180,41,0.35)'
+					}, {
+						offset: 1,
+						color: 'rgba(224,180,41,0.00)'
+					}])
+
+				}
+			}, //区域颜色渐变
+			data: data_
+		};
+		if (type == "探测器") {
+			seltype = type1
+		} else if (type == "控制器") {
+			seltype = type2
+		} else {
+			seltype = type3
+		}
+		var myChart = echarts.init(document.getElementById('callNumberLine'));
+		var arrDate = xAxis;
+		var option = {
+			height:150,
+			backgroundColor: '', //背景颜色透明
+			tooltip: {
+				trigger: 'axis', //鼠标经过提示
+			},
+			grid: {
+				left: 0,
+				top: '5%',
+				left: 0,
+				bottom: '5%',
+				containLabel: true
+			},
+			legend:{
+				textStyle: { //图例文字的样式
+					color: '#fff',
+					fontSize: 16
+				},
+				data:['探测器','控制器','输出模块'],
+				icon: "circle",
+				bottom:'-3%',
+				itemWidth: 10,  // 设置宽度
+				itemHeight: 10, // 设置高度
+				itemGap: 40 // 设置间距
+			},
+			xAxis: {
+				type: 'category',
+				name:'',
+
+				nameTextStyle:{
+					color:"white",
+					fontSize: 16
+				},
+				data: arrDate,
+				color:['#fff'],
+				show: true, //隐藏x轴
+				axisLabel: {
+					interval: 0,
+					fontSize:25,
+					textStyle: {
+						color: 'rgba(162,165,176,0)'
+					}
+				}
+			},
+			yAxis: {
+				type: 'value',
+				name:'上面y轴',
+				splitLine: {
+					show: false,
+
+				}, //去除网格线
+				show: true, //隐藏y轴,
+				axisLabel: {
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			// color: ['#1DB0B8', '#37C6C0', '#D0E9FF', '#c7353a', '#f5b91e'],
+			series: [seltype]
+		};
+		myChart.setOption(option);
+	}
+
+	function dat2(s, x, no) {
+		console.log(no)
+		var myChartTen = echarts.init(document.getElementById('toptenLine'));
+		var arrDate = x;
+		// 指定图表的配置项和数据
+		var option = {
+			height:150,
+			backgroundColor: '', //背景颜色透明
+			tooltip: {
+				trigger: 'axis', //鼠标经过提示
+			},
+
+			grid: {
+				left: 0,
+				top: 0,
+				left: 0,
+				bottom: 0,
+				containLabel: true
+			},
+			legend:{
+				textStyle: { //图例文字的样式
+					color: '#fff',
+					fontSize: 16
+				},
+				data:['探测器','控制器','输出模块'],
+				icon: "circle",
+				bottom:'0%',
+				itemWidth: 10,  // 设置宽度
+				itemHeight: 10, // 设置高度
+				itemGap: 40 // 设置间距
+			},
+			xAxis: {
+				type: 'category',
+				data: arrDate,
+				boundaryGap: false,
+				splitNumber: 1,
+				show: true, //隐藏x轴
+				axisLabel: {
+					interval: 0,
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			yAxis: {
+				type: 'value',
+				name:'',
+				nameTextStyle:{
+					fontSize: 16,
+					color:"white",
+				},
+
+				splitLine: {
+					show: false,
+					// lineStyle: {
+					//     color: ['#343a62'],
+					//     width: 1,
+					//     type: 'solid'
+					// }
+				}, //去除网格线
+				show: true, //隐藏y轴,
+				axisLabel: {
+					textStyle: {
+						color: '#a2a5b0'
+					}
+				}
+			},
+			series: [{
+				name: no,
+				type: 'line',
+				itemStyle: {
+					normal: {
+						color: 'red',
+						// lineStyle: {        // 系列级个性化折线样式
+						//     width: 2,
+						//     type: 'solid',
+						//     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+						//         offset: 0,
+						//         color: 'green'
+						//     }, {
+						//         offset: 1,
+						//         color: 'red'
+						//     }]),//线条渐变色
+						// }
+					},
+					emphasis: {
+						color: 'red',
+						lineStyle: { // 系列级个性化折线样式
+							width: 1,
+							type: 'dotted',
+							color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+								offset: 0,
+								color: 'green'
+							}, {
+								offset: 1,
+								color: 'red'
+							}])
+						}
+					}
+				}, //线条样式
+				areaStyle: {
+					normal: {
+						//颜色渐变函数 前四个参数分别表示四个位置依次为左、下、右、上
+						color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+
+							offset: 0,
+							color: 'rgba(49,95,199,1)'
+						}, {
+							offset: 0.34,
+							color: 'rgba(49,95,199,0.55)'
+						}, {
+							offset: 1,
+							color: 'rgba(49,95,199,0.0)'
+						}])
+
+					}
+				}, //区域颜色渐变
+				data: s
+			},]
+		};
+
+
+		// 使用刚指定的配置项和数据显示图表。
+		myChartTen.setOption(option);
+	}
+
+
+	$("#search1").find('[id="startTime"]').fdatepicker({
+		format: 'yyyy-mm-dd',
+		pickTime: false
+	});
+	$("#search2").find('[id="startTime"]').fdatepicker({
+		format: 'yyyy-mm-dd',
+		pickTime: false
+	});
+	$("#search1").find('[id="endTime"]').fdatepicker({
+		format: 'yyyy-mm-dd',
+		pickTime: false
+	});
+	$("#search2").find('[id="endTime"]').fdatepicker({
+		format: 'yyyy-mm-dd',
+		pickTime: false
+	});
+
+	//设置显示下拉
+	function logout() {
+		var user_xiala = document.getElementById("user_xiala");
+		if (user_xiala.style.display == "block") {
+			user_xiala.style.display = "none";
+		} else {
+			user_xiala.style.display = "block";
+		}
+	}
+	/*点击关闭按钮*/
+	function closeBox() {
+		var popBox = document.getElementById("popBox");
+		var popLayer = document.getElementById("popLayer");
+		popBox.style.display = "none";
+		popLayer.style.display = "none";
+	}
+	function logout2() {
+		var user_xiala = document.getElementById("user_xiala");
+		user_xiala.style.display = "none";
+		jeBox({
+			cell: "jbx",
+			title: "修改密码",
+			boxSize: ["400px", "300px"],
+			content: '<div style="margin: 40px 68px;width: 300px;height: 125px" >' +
+					'<div class="content_input">旧密码：&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" name="oldpwd" class="input" id="oldpwd"/></div>' +
+					'<div class="content_input">新密码：&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" name="newpwd" class="input" id="newpwd"/></div>' +
+					'<div class="content_input">确认密码：<input type="password" name="quenewpwd" id="quenewpwd" class="input" onblur="checkpwd()" /><span id="tishi"></span></div>' +
+					'</div>',
+			maskLock: true,
+			btnAlign: "right",
+			button: [{
+				name: '确定',
+				callback: function (index) {
+					var password = document.getElementById("newpwd").value;
+					var repassword = document.getElementById("quenewpwd").value;
+					var url = requestConf.domain + "sys/reversUserPassword";
+					var isAdmin = localStorage.getItem("isAdmin");
+					var req = {
+						id: user.userId,
+						oldPassword: $("#oldpwd").val(),
+						newPassword: $("#newpwd").val(),
+					};
+
+					if (isAdmin == 0) {//客户
+						req.id = user.customerId;
+						url = requestConf.domain + "sys/reversCustomerPassword";
+					}
+					if (password == repassword){
+						$.ajax({
+							url: url,
+							type: "post",
+							contentType: "application/json",
+							//dataType: "json",
+							data: JSON.stringify(req),
+							beforeSend: function (request) {
+								request.setRequestHeader("X-Access-Token",
+										user.token
+								);
+							},
+							success: function(data) {
+								if (data.success) {
+									jeBox.msg("修改密码成功....！", {icon: 2,time:3});
+									localStorage.clear()
+									if (isAdmin == 1)
+										setTimeout(function() {
+											window.location.href = "index.html";
+										}, 1000);
+									else
+										setTimeout(function() {
+											window.location.href = "index_kh.html"
+										}, 1000);
+
+								}else{
+									jeBox.msg("旧密码错误....！", {icon: 3,time:3});
+								}
+							},
+							error: function () {
+								console.log("请求失败");
+							}
+						});
+					}
+				}
+			},
+				{
+					name: '取消'
+				}
+			]
+		})
+	}
+	//验证密码是否一致
+	function checkpwd() {
+		var password = document.getElementById("newpwd").value;
+		var repassword = document.getElementById("quenewpwd").value;
+		if (password == repassword){
+			document.getElementById("submit").disabled = false;
+		}else{
+			document.getElementById("tishi").innerHTML="<br><font color='red'>两次输入密码不一致!</font>";
+			document.getElementById("submit").disabled = true;
+
+		}
+	}
+
+	//退出
+	function logout1() {
+		var user_xiala = document.getElementById("user_xiala");
+		user_xiala.style.display = "none";
+		jeBox({
+			cell: "jbx",
+			title: "退出",
+			boxSize: ["300px", "150px"],
+			content: '<div style="font-size:18px;padding: 17px 10px;">' +
+					'确定要退出系统么？' +
+					'</div>',
+			maskLock: true,
+			btnAlign: "right",
+			button: [{
+				name: '退出',
+				callback: function (index) {
+					var url = requestConf.domain + "sys/logout";
+					var isAdmin = localStorage.getItem("isAdmin");
+					var req = {
+						uid: user.userId
+					}
+					if (isAdmin == 0) {
+						req.uid = user.customerId;
+						url = requestConf.domain + "sys/logout1";
+					}
+					$.ajax({
+
+						url: url,
+						type: "get",
+						// contentType: "application/json",
+						dataType: "json",
+						data: req,
+						beforeSend: function (request) {
+							request.setRequestHeader("X-Access-Token",
+									user.token
+							);
+
+						},
+						success: function (data) {
+							// console.log(data)
+							panduan(data)
+							if (data.success) {
+								localStorage.clear()
+								if (isAdmin == 1)
+									window.location.href = "index.html"
+								else
+									window.location.href = "index_kh.html"
+							}
+						},
+						error: function () {
+							console.log("请求失败");
+						}
+					});
+				}
+			},
+				{
+					name: '取消'
+				}
+			]
+		})
+
+
+	}
+
+
+	// 选择省  下拉框
+	function province_popup() {
+		var uid = "";
+		if (isAdmin == 0)
+			uid = user.customerId;
+		else
+			uid = user.userInfo.id;
+		$.ajax({
+			url: requestConf.domain + "monitor/area/querCustomerByUid",
+			type: "GET",
+			dataType: "json", //返回格式为json
+			// contentType: "application/json",
+
+			data: {
+				uid: uid
+			},
+			beforeSend: function (request) {
+				request.setRequestHeader("X-Access-Token",
+						user.token
+				);
+			},
+			success: function (data) {
+				panduan(data)
+				$("#prolist").empty()
+				console.log(data)
+				let list = "<option value=''>全部</option>";
+				if (data.success) {
+					$.each(data.result, function (i, item) {
+						if (localStorage.getItem("addressobj") != null) {
+							if (item.areaName == selfaddress.oneAreaName) {
+								list += `<option selected="selected" value="${item.id}">${item.areaName}</option>`
+								prolist = item.id;
+							} else {
+								list += `<option value="${item.id}">${item.areaName}</option>`
+							}
+						} else {
+							list += `<option value="${item.id}">${item.areaName}</option>`
+						}
+					})
+					$("#prolist").append(list);
+					$("#citylist").append("<option value=\"\">全部</option>");
+					$("#khlist").append("<option value=\"\">全部</option>")
+					gradeChange();
+				}
+			}
+		});
+	}
+	// 选择市  下拉框
+	function city_popup(proid) {
+		if (proid == "") {
+			$("#citylist").empty();
+			$("#citylist").html("<option value=\"\">全部</option>");
+			kehu_popup("")
+			return;
+		}
+		$.ajax({
+			url: requestConf.domain + "monitor/area/querCustomerByUid",
+			type: "GET",
+			dataType: "json", //返回格式为json
+			// contentType: "application/json",
+
+			data: {
+				uid: user.userInfo.id,
+				provinceid: proid
+			},
+			beforeSend: function (request) {
+				request.setRequestHeader("X-Access-Token",
+						user.token
+				);
+			},
+			success: function (data) {
+				panduan(data)
+				$("#citylist").html("<option value=\"\">全部</option>")
+				console.log(data)
+				let list = "";
+				if (data.success) {
+					$.each(data.result, function (i, item) {
+						if (localStorage.getItem("addressobj") != null) {
+							if (item.areaName == selfaddress.twoAreaName) {
+								list += `<option selected value="${item.id}">${item.areaName}</option>`
+								citylist = item.id;
+							} else
+								list += `<option  value="${item.id}">${item.areaName}</option>`
+						} else {
+							list += `<option  value="${item.id}">${item.areaName}</option>`
+						}
+					})
+					cityChange()
+					$("#citylist").append(list)
+				}
+				kehu_popup("0")
+			}
+		});
+	}
+
+	function cityChange() {
+		let cityid = actions.getInputVal("citylist");
+		kehu_popup(cityid)
+	}
+
+	function gradeChange() {
+		let proid = actions.getInputVal("prolist");
+		city_popup(proid)
+	}
+	// 选择客户 下拉框
+	function kehu_popup(cityid) {
+
+		if (cityid == "") {
+			$("#khlist").empty();
+			$("#khlist").html("<option value=\"\">全部</option>");
+			return;
+		}
+
+		$.ajax({
+			url: requestConf.domain + "monitor/customers/queryTowVoAllById",
+			type: "GET",
+			dataType: "json", //返回格式为json
+			// contentType: "application/json",
+
+			data: {
+				uid: user.userInfo.id,
+				pid: $("#prolist").val(),
+				cid: $("#citylist").val(),
+				customerid: ''
+			},
+			beforeSend: function (request) {
+				request.setRequestHeader("X-Access-Token",
+						user.token
+				);
+			},
+			success: function (data) {
+				panduan(data)
+				$("#khlist").html("<option value=\"\">全部</option>")
+				console.log("dgq")
+				console.log(data)
+				let list = "";
+				if (data.success) {
+					$.each(data.result, function (i, item) {
+						if (localStorage.getItem("addressobj") != null) {
+							if (item.name == selfaddress.name) {
+								list += `<option selected value="${item.id}">${item.name}</option>`
+								khlist = item.id;
+							} else
+								list += `<option value="${item.id}">${item.name}</option>`
+						} else
+							list += `<option value="${item.id}">${item.name}</option>`
+					})
+					$("#khlist").append(list)
+					console.log(localStorage.getItem("sbdz"))
+					if (localStorage.getItem("sbdz") != null) {
+						singlesb()
+						currentsb_7day()
+						currentsb_1day()
+						/* timestamps_nother = setInterval(function () {
+							singlesb()
+							currentsb_7day()
+							currentsb_1day()
+						}, 10000) */
+					} else {
+						console.log("正常进入2")
+						pagelimit(1)
+						//alert($("#khlist").val())
+						var khValue = $("#khlist").val();
+						if ($("#khlist").val() == null)
+							khValue = '';
+						baojing_7day(khValue)
+						baojing_1day(khValue)
+						/* timestamps = setInterval(function () {
+							pagelimit(1)
+							baojing_7day(khValue)
+							baojing_1day(khValue)
+						}, 10000); */
+
+
+
+					}
+				}
+			}
+		});
+	}
+
+	function selectbutton() {
+		$("#currentpage").val(1);
+		deviceTypeAttr = actions.getAttr('deviceType'), 
+		deviceType = actions.getInputVal('deviceType'), 
+		deviceNum = actions.getInputVal('deviceNum'), 
+		startTime = actions.getInputVal('startTime'), 
+		endTime = actions.getInputVal('endTime'),
+		khlist = actions.getInputVal("khlist"),
+		prolist = actions.getInputVal("prolist"), 
+		citylist = actions.getInputVal("citylist");
+		/* clearInterval(timestamps_nother)
+		clearInterval(timestamps); */
+		pagelimit(1)
+		baojing_7day($("#khlist").val())
+		baojing_1day($("#khlist").val())
+		/* timestamps_nother = setInterval(function () {
+			baojing_7day(khlist)
+			baojing_1day(khlist)
+		}, 10000) */
+
+	}
+	/*点击关闭按钮*/
+	// function closeBox() {
+	// 	var popBox = document.getElementById("popBox");
+	// 	var popLayer = document.getElementById("popLayer");
+	// 	popBox.style.display = "none";
+	// 	popLayer.style.display = "none";
+	// }
+</script>
+	<audio id="voice" preload loop>
+	    <source src="./audio/alarm.mp3" type="audio/mp3"></source>
+	  		当前浏览器不支持播放声音
+	</audio>
+	 <audio id="breakdownVoice" preload loop>
+	     <source src="./audio/breakdown.mp3" type="audio/mp3"></source>
+	   		当前浏览器不支持播放声音
+	 </audio>
+</body>
+
+</html>

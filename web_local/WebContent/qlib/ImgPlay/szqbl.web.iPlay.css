@@ -1,0 +1,56 @@
+.iPlay {
+	padding: 10px 0px;
+	overflow: hidden;
+}
+
+.iPlay .role {
+	background: url("img/play.png");
+	float: left;
+	width: 21px;
+	height: 21px;
+	line-height: 20px;
+	overflow: hidden;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-top: 0px;
+}
+
+.iPlay .cell {
+	float: left;
+	height: 15px;
+	line-height: 15px;
+	padding: 0px;
+	margin-right: 10px;
+}
+
+.iPlay .cell li {
+	float: left;
+	display: block;
+	width: 12px;
+	height: 20px;
+	line-height: 20px;
+	padding: 0px 1px;
+	margin: 0px;
+	overflow: hidden;
+	background-color: #87C0DE;
+	margin-left: 3px;
+}
+
+.iPlay .cell li.red {
+	background-color: red;
+}
+
+.iPlay .cell li:hover, .iPlay .cell li.on {
+	background-color: #04679A;
+}
+.iPlay .img {
+	padding: 10px;
+	text-align: left;
+}
+.iPlay .w100 img{
+	width: 100%;
+}
+.iPlay .w75 img{
+	width: 75%;
+	float: left;
+}

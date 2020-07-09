@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.demo.monitor.mapper.CustomerAccountsMapper">
+
+	<select id="queryCustAccountsVoAll" resultType="org.jeecg.modules.demo.monitor.vo.CustomersAccountsVo">
+		SELECT a1.Area_name oneAreaName,a2.Area_name twoAreaName,a.*,c.*
+		from customer_accounts a
+		LEFT JOIN customers c on c.id = a.Customer_id
+		LEFT JOIN distribution dis on dis.customer_id = c.id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id = c.Two_area_id
+		${ew.customSqlSegment}
+	</select>
+	<select id="getUserByName" resultType="org.jeecg.modules.demo.monitor.entity.CustomerAccounts">
+		SELECT
+		customer_accounts.Id,
+		customer_accounts.Customer_id,
+		customer_accounts.Account,
+		customer_accounts.`Password`,
+		customer_accounts.Short_letter,
+		customer_accounts.Phone,
+		customer_accounts.Remark,
+		customer_accounts.Cust_state
+		from customer_accounts
+		where account = #{username}
+	</select>
+	<select id="getCustomerId" resultType="org.jeecg.modules.demo.monitor.entity.CustomerAccounts">
+		select * from customer_accounts where Customer_id = #{customerId}
+	</select>
+
+</mapper>

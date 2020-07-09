@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.AreaMapper">
+	<insert id="addAll" useGeneratedKeys="true">
+	  insert into distribution (User_id,Customer_id) values (#{useId},#{id})
+	</insert>
+
+
+	<delete id="deleteAreaAll">
+  	delete  from distribution where User_id =#{useId}
+	</delete>
+
+    <!-- 分配查询城市 -->
+	<select id="findListByNum" resultType="java.util.HashMap"
+		parameterType="java.lang.Integer">
+		SELECT id,Area_name as label
+		from area
+		WHERE num =#{num}
+	</select>
+
+	<!-- 客户列表信息 -->
+	<select id="queryAreaVoAll"
+		resultType="org.jeecg.modules.demo.monitor.vo.AreaVo">
+		select
+		a2.*,
+		a1.*,
+		a2.id twoAreaId,
+		a1.id oneAreaId,
+		a2.Area_name twoAreaName,
+		a1.Area_name oneAreaName,
+		a2.num,a1.num onenum
+		from area a2
+		inner JOIN area a1 on a1.id = a2.num
+		${ew.customSqlSegment}
+	</select>
+
+
+	<select id="findCustomerByUid" resultType="java.lang.Long">
+		select Customer_id from distribution where User_id =#{uid}
+	</select>
+	<select id="findAllAid" resultType="java.lang.Integer">
+		select id from area
+	</select>
+	<!-- 根据省份查询省份信息 -->
+	<select id="querAreaByNum" resultType="org.jeecg.modules.demo.monitor.entity.Area">
+		select id,Area_name,num from area where id = #{num}
+	</select>
+
+	<!--下拉框根据用户id查询省份信息 -->
+	<select id="querOneAreaByUid" resultType="org.jeecg.modules.demo.monitor.vo.DropdownVo">
+		select
+			a1.Area_name,a1.id
+			from distribution d
+		LEFT JOIN sys_user u on u.id = d.User_id
+		LEFT JOIN device dr on d.Customer_id = dr.device_area_id
+		left join customers c on c.id = dr.Customer_id
+		left join customers c2 on c2.id = d.Customer_id
+		inner JOIN area a1 on a1.id = c.One_area_id or a1.id = c2.One_area_id
+		inner JOIN area a2 on a2.id = c.Two_area_id or a2.id = c2.Two_area_id
+ 		where d.User_id= #{uid}
+		GROUP BY a1.Area_name
+	</select>
+
+
+
+	<!--下拉框根据用户id查询城市信息 -->
+	<select id="querTowAreaByUid"
+			resultType="org.jeecg.modules.demo.monitor.vo.DropdownVo">
+		
+		select
+			a2.Area_name,a2.id,a1.id
+			from distribution d
+		LEFT JOIN sys_user u on u.id = d.User_id
+		LEFT JOIN device dr on d.Customer_id = dr.device_area_id
+		left join customers c on c.id = dr.Customer_id
+		left join customers c2 on c2.id = d.Customer_id
+		inner JOIN area a1 on a1.id = c.One_area_id or a1.id = c2.One_area_id
+		inner JOIN area a2 on a2.id = c.Two_area_id or a2.id = c2.Two_area_id
+		where d.User_id=#{uid} and a1.id=#{provinceid}
+		GROUP BY a2.Area_name
+	</select>
+
+	<!--下拉框根据用户id查询客户名称 -->
+	<select id="querCustomerByUid" resultType="org.jeecg.modules.demo.monitor.vo.DropdownVo">
+		select
+			c.id,c.name,c.longitude,c.latitude,c.Cust_logo
+		FROM customers c
+		WHERE ID IN(
+			select
+				d.Customer_id
+				from distribution d
+			where d.User_id = #{uid}
+			union 
+			select
+				dr.Customer_id
+				from distribution d
+			LEFT JOIN device dr on d.Customer_id = dr.device_area_id
+			where d.User_id = #{uid}
+		)
+		AND One_area_id = #{provinceid} and Two_area_id = #{cityid}
+	</select>
+
+	<select id="findAllCid" resultType="java.lang.Integer">
+		select id from customers
+	</select>
+
+</mapper>

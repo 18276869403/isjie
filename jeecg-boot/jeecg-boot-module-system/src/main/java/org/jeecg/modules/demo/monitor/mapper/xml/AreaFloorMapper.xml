@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+		namespace="org.jeecg.modules.demo.monitor.mapper.AreaFloorMapper">
+
+	<resultMap id="deviceAreaVO" type="org.jeecg.modules.demo.monitor.vo.DeviceAreaVO">
+		<id property="id" 					column="id"/>
+		<result property="customerId" 		column="customer_id"/>
+		<result property="areaName" 		column="area_name"/>
+		<association property="areaXY" resultMap="areaXY"/>
+	</resultMap>
+
+	<resultMap id="areaXY" type="org.jeecg.modules.demo.monitor.vo.AreaXY">
+		<id property="id" column="af_id"/>
+		<result property="customerId" column="af_customerId"/>
+		<result property="deviceAreaId" column="af_deviceAreaId"/>
+		<result property="xaxis" column="x_axis"/>
+		<result property="yaxis" column="y_axis"/>
+	</resultMap>
+
+	<!-- 根据客户id查询区域 -->
+	<select id="findAllArea" resultType="org.jeecg.modules.demo.monitor.vo.DeviceAreaVO">
+		select
+		       da.id, da.customer_id,da.area_name
+		from device_area da
+		where da.customer_id = #{customerId}
+	</select>
+
+	<select id="findAreaPoint" resultMap="deviceAreaVO">
+		select
+			af.x_axis, af.y_axis, af.id as af_id, af.customer_id as af_customerId, af.device_area_id as af_deviceAreaId,
+		    da.area_name, da.id, da.customer_id
+		from area_floorplan af
+		inner join device_area da on da.id = af.device_area_id
+		where da.customer_id = #{customerId}
+	</select>
+
+	<!-- 获取鸟瞰图 -->
+	<select id="getAerialView" resultType="java.lang.String">
+		select c.BackUp1 from customers c
+		where id = #{customerId}
+	</select>
+	
+	<select id="selectAreaPoint" resultType="org.jeecg.modules.demo.monitor.vo.DeviceAreaVO">
+		select * from device_area da
+		inner join area_floorplan af on da.id = af.device_area_id
+		inner join customers c on af.customer_id = c.id
+		where c.id = #{customerId}
+	</select>
+	
+	<!--更新坐标-->
+	<update id="updateAreaFloorPlan" >
+		update area_floorplan set
+			x_axis = #{xaxis},y_axis=#{yaxis}
+		where id = #{id}
+	</update>
+	<!--新增坐标-->
+	<insert id="saveAreaFloorPlan" useGeneratedKeys="true">
+		insert into
+		    area_floorplan(customer_id, device_area_id, x_axis, y_axis)
+		value(#{customerId}, #{deviceAreaId}, #{xaxis}, #{yaxis})
+	</insert>
+
+	<!-- 删除标记 -->
+	<delete id="deletePoint" parameterType="java.lang.Integer">
+		delete from area_floorplan where id = #{id}
+	</delete>
+</mapper>

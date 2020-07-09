@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: dev
+  production: false
+  basic:
+    enable: false
+    username: jeecg
+    password: jeecg1314

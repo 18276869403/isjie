@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.demo.monitor.mapper.DistributionMapper">
+
+	<select id="custoDistribution"
+		resultType="org.jeecg.modules.demo.monitor.vo.DistributionVo">
+		select
+		d.Id,c.`name`,c.One_area_id,c.Two_area_id,c.Project_name,one.One_area_name,two.Two_area_name
+		from distribution d
+		left join device dr on dr.device_area_id = d.Customer_id
+		LEFT JOIN customers c on dr.Customer_id=c.Id or c.id = d.Customer_id
+		LEFT JOIN one_area one on one.Id=c.One_area_id
+		LEFT JOIN two_area two on two.Id=c.Two_area_id
+		LEFT JOIN sys_user users on users.id=d.User_id
+		${ew.customSqlSegment}
+	</select>
+	
+	<select id="queryAll" resultType="org.jeecg.modules.demo.monitor.entity.Distribution">
+		SELECT d.Id,d.User_id,d.Customer_id
+		from distribution d
+		INNER JOIN sys_user u on u.id = d.User_id and u.id = #{userId}
+	</select>
+	<!-- <select id="findAll" resultType="org.jeecg.modules.demo.monitor.vo.LoadCustomersVo">
+		SELECT c.id,c.`name`,c.biao_zhu_logo Cust_logo,c.longitude,c.latitude,c.cust_logo logo,c.project_name projectName
+		from distribution d
+		INNER JOIN sys_user u on u.id = d.User_id and u.id = #{userId}
+		INNER JOIN device dr on dr.device_area_id = d.Customer_id
+		INNER JOIN customers c on c.id = dr.Customer_id
+	</select> -->
+	<select id="findAll" resultType="org.jeecg.modules.demo.monitor.vo.LoadCustomersVo">
+		SELECT c.id,c.`name`,c.biao_zhu_logo Cust_logo,c.longitude,c.latitude,c.cust_logo logo,c.project_name projectName
+		from customers c
+		where  c.id in(
+			select d.Customer_id from distribution d
+			where d.user_id = #{userId}
+			union  
+			select dr.Customer_id from device as dr
+			where dr.device_area_id in(
+				select d.Customer_id from distribution d
+				left join device_area as da on da.id = d.Customer_id
+				where d.user_id = #{userId}
+			) 
+		)
+	</select>
+
+	<select id="findUsernameByCustomerId" resultType="org.jeecg.modules.system.entity.SysUser">
+		select * from
+		distribution d
+		LEFT JOIN sys_user s on d.User_id = s.id 
+		where d.Customer_id=#{customerId} and org_code = '1'
+	</select>
+	<select id="queryBycid" resultType="java.lang.String">
+		select User_id from distribution where Customer_id = #{customerId} limit 1
+	</select>
+</mapper>

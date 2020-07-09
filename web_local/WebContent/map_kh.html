@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>是杰安全云</title>
+		<link rel="stylesheet" type="text/css" href="js/skin/jebox.css"/>
+		
+		<script src="./js/request.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/province.js" type="text/javascript" charset="utf-8"></script>
+		<script src="./js/quanxianrenzheng.js"></script>
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/skin/jebox/jquery-1.7.2.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/skin/jebox/jquery.jebox.js" type="text/javascript" charset="utf-8"></script>
+
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
+			#table tr td {
+
+				height: 38px;
+				line-height: 38px;
+
+			}
+
+			#container {
+				min-width: 100%;
+				min-height: 960px;
+
+				overflow: hidden;
+			}
+
+			.angle {
+				display: inline-block;
+				width: 0px;
+				height: 0px;
+				position: absolute;
+				bottom: -60px;
+				border: 14px solid;
+				left: 45%;
+				bottom: -25px;
+				opacity: 0.8;
+				border-color: #333333 transparent transparent transparent;
+			}
+
+			.yuan {
+				background-color: red;
+				width: 8px;
+				height: 8px;
+				border-radius: 8px;
+				float: left;
+				margin-top: 11px;
+				margin-left: 6px;
+				margin-right: 6px;
+			}
+
+			.yuan1 {
+				background-color: #2cc290;
+				width: 8px;
+				height: 8px;
+				border-radius: 8px;
+				float: left;
+				margin-top: 11px;
+				margin-left: 6px;
+				margin-right: 6px;
+
+			}
+		</style>
+		<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=DK7RA71wlT1niGTIZgtUFrzCAUG2Gjud"></script>
+
+	</head>
+	<body>
+
+		<div id="" style="position: relative;height: 60px;width: 100%;background-color: #000000;z-index: 99999;">
+			<img src="img/logo.jpg" style="margin-top: 10px;margin-left: 20px;float: left;">
+			<div id="" style="float: left;font-size: 16px;color: #FFFFFF;line-height: 60px;margin-left: 10px;">
+				是杰安全云
+			</div>
+			<div id="all" style="float: left;color: #FFFFFF;font-size: 16px;line-height: 60px;width: 24%;text-align: center;margin-left: 27%;">
+				<div onclick="heade()" id="sy" style="width: 33.33%;float: left;background-color: #1d4555;">
+					首页
+				</div>
+				<div onclick="jilu()" id="ssjl" style="width: 33.33%;float: left;">
+					实施列表
+				</div>
+				<div onclick="alarm()" id="bjjl" style="width: 33.33%;float: left;">
+					历史记录
+				</div>
+			</div>
+
+			<div id="user" style="float: right;color: #FFFFFF;line-height: 60px;font-size: 15px;margin-right: 20px;">
+				<img onclick="logout()" src="img/shezhi@1x.png" style="margin-top: 16px;margin-left: 8px;float: right;">
+				<span id="">
+					当前登陆用户:<span style="margin: 0px 10px;" id="name"></span>
+				</span>
+			</div>
+		</div>
+		<div id="">
+			<div id="right1" style="border: 2px solid #204eb2;color: #FFFFFF;position: fixed;right: 50px; top: 80px;z-index: 999999999;background-color: #0b0f17;width: 500px;height: 200px;opacity: 0.7;">
+
+				<div onclick="show1()" id="" style="float: left;width: 20px;height: 200px;background-color: #2857b3;line-height: 200px;">
+					<img src="img/point.png" style="width: 16px;height: 25px;">
+				</div>
+				<div id="view1">
+
+
+					<div id="" style="text-align: center;color: #0fd4db;font-size: 16px;height: 50px;line-height: 50px;font-weight: 700;border-bottom: 1px solid #343a62;">
+						实时报警窗口
+					</div>
+
+
+					<table id="table" style="text-align: center;width: 480px;">
+
+						<!-- <tr>
+						<td>2019-12-12 12:12:12</td>
+						<td>河北邯郸市</td>
+						<td>ASD00001</td>
+						<td style="color: red;">异常</td>
+					</tr>
+					<tr>
+						<td>2019-12-12 12:12:12</td>
+						<td>河北邯郸市</td>
+						<td>ASD00001</td>
+						<td style="color: aqua;">正常</td>
+					</tr>
+					<tr>
+						<td>2019-12-12 12:12:12</td>
+						<td>河北邯郸市</td>
+						<td>ASD00001</td>
+						<td style="color: red;">异常</td>
+					</tr>
+					<tr>
+						<td>2019-12-12 12:12:12</td>
+						<td>河北邯郸市</td>
+						<td>ASD00001</td>
+						<td style="color: red;">异常</td>
+					</tr> -->
+					</table>
+				</div>
+
+			</div>
+			<div id="right2" style="border: 2px solid #204eb2;color: #FFFFFF;position: fixed;right: 50px; top: 300px;z-index: 99999;background-color: #0b0f17;width: 500px;height: 230px;opacity: 0.7;">
+				<div id="" onclick="show2()" style="float: left;width: 20px;height: 230px;background-color: #2857b3;line-height: 200px;">
+					<img src="img/point.png" style="width: 16px;height: 25px;">
+				</div>
+				<div id="view2">
+
+
+					<div id="" style="text-align: center;color: #0fd4db;font-size: 16px;height: 50px;line-height: 50px;font-weight: 700;border-bottom: 1px solid #343a62;">
+						设备情况
+					</div>
+
+
+					<div id="" style="width: 400px;height:100px;border-bottom: 1px solid #343a62;border-left: 1px solid #343a62;margin: 0 auto;margin-top: 30px;">
+						<div id="">
+							<div id="" style="background-color: #29d197;width: 20px;height: 100px;float: left;margin-left: 50px;">
+								<div id="zhu1" style="background-color: #0b0f17;width: 20px;height: 80px;float: left;">
+
+								</div>
+							</div>
+							<div id="" style="background-color: #1690f1;width: 20px;height: 100px;margin-left: 50px;float: left;">
+								<div id="zhu2" style="background-color: #0b0f17;width: 20px;height: 100px;float: left;">
+
+								</div>
+							</div>
+							<div id="" style="background-color: #f08400;width: 20px;height: 100px;margin-left: 50px;float: left;">
+								<div id="zhu3" style="background-color: #0b0f17;width: 20px;height: 80px;float: left;">
+
+								</div>
+							</div>
+							<div id="" style="background-color: #e31c14;width: 20px;height: 100px;margin-left: 50px;float: left;">
+								<div id="zhu4" style="background-color: #0b0f17;width: 20px;height: 80px;float: left;">
+
+								</div>
+							</div>
+							<div id="" style="background-color: #973dbd;width: 20px;height: 100px;margin-left: 50px;float: left;">
+								<div id="zhu5" style="background-color: #0b0f17;width: 20px;height: 80px;float: left;">
+
+								</div>
+							</div>
+						</div>
+
+						<div id="" style="height: 50px;width: 90%;float: left;margin-top: 15px;">
+							<label style="margin-left: 45px;">正常</label>
+							<label style="margin-left: 32px;">维护</label>
+							<label style="margin-left: 32px;">报警</label>
+							<label style="margin-left: 35px;">故障</label>
+							<label style="margin-left: 35px;">故障</label>
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<div id="right3" style="border: 2px solid #204eb2;color: #FFFFFF;position: fixed;right: 50px; top: 550px;z-index: 99999;background-color: #0b0f17;width: 500px;height: 200px;opacity: 0.7;">
+				<div id="" onclick="show3()" style="float: left;width: 20px;height: 200px;background-color: #2857b3;line-height: 200px;">
+					<img src="img/point.png" style="width: 16px;height: 25px;">
+				</div>
+				<div id="view3">
+					<div id="" style="text-align: center;color: #0fd4db;font-size: 16px;height: 50px;line-height: 50px;font-weight: 700;border-bottom: 1px solid #343a62;">
+						客户设备情况
+					</div>
+					<div id="" style="margin: 0 auto;float: right;">
+						<div id="main2" style="width: 240px;height:150px;float: left;"></div>
+						<div id="main3" style="width: 240px;height:150px;float: right;"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div id="" style="position: absolute;top: 100px;left: 50px;z-index: 9999;color: #FFFFFF;text-align: center;font-size: 13px;">
+			<div id="" style="background-color: #303232;width: 160px;height: 30px;line-height: 30px;">
+				<div onclick="selprovince()" id="" style="width: 90%;margin: 0 auto;">
+					<div id="sfmr" style="float: left;margin-left: 5px;">
+
+					</div>
+
+
+				</div>
+
+			</div>
+
+
+			<div id="" style="background-color: #303232;width: 160px;height: 30px;line-height: 30px;margin-top: 10px;">
+				<div onclick="selcity()" id="" style="width: 90%;margin: 0 auto;">
+					<div id="mrcity" style="float: left;margin-left: 5px;">
+
+					</div>
+
+
+				</div>
+			</div>
+
+			<div id="" style="background-color: #303232;width: 160px;height: 30px;line-height: 30px;margin-top: 10px;">
+				<div id="" onclick="selgongsi()" style="width: 90%;margin: 0 auto;">
+					<div id="gsname" style="float: left;margin-left: 5px;">
+
+					</div>
+
+
+				</div>
+			</div>
+
+
+		</div>
+
+		<div id="container"></div>
+	</body>
+</html>
+<script type="text/javascript">
+	var guster = JSON.parse(localStorage.getItem("guster"));
+	var right_top1, right_top2, right_top3 = true;
+	var timestamp;
+	console.log(guster)
+	$("#user").find("span[id=name]").text(guster.webName)
+	$("#sfmr").text(guster.oneAreaName)
+	$("#mrcity").text(guster.twoAreaName)
+	$("#gsname").text(guster.customerName)
+
+	$(function() {
+		// ssbj()
+		ssbjall()
+		sbqk()
+		//用户设备情况
+		yhsbqk_left()
+		yhsbqk_right()
+		timestamp=setInterval(function(){
+			ssbjall()
+			sbqk()
+			yhsbqk_left()
+			yhsbqk_right()
+		},10000)
+		addMarker()
+         
+		// getkehubyuid();
+	})
+
+	function show1() {
+		right_top1 = !right_top1;
+		if (!right_top1) {
+			$("#view1").css("display", "none")
+			$("#right1").css("width", "20px")
+			 $("#right1").css("right", "0px")
+		} else {
+			$("#view1").css("display", "block")
+			$("#right1").css("width", "500px")
+			$("#right1").css("right", "50px")
+		}
+
+	}
+
+	function show2() {
+		right_top2 = !right_top2;
+		if (!right_top2) {
+			$("#view2").css("display", "none")
+			$("#right2").css("width", "20px")
+			 $("#right2").css("right", "0px")
+		} else {
+			$("#view2").css("display", "block")
+			$("#right2").css("width", "500px")
+			$("#right2").css("right", "50px")
+		}
+
+	}
+
+	function show3() {
+		right_top3 = !right_top3;
+		if (!right_top3) {
+			$("#view3").css("display", "none")
+			$("#right3").css("width", "20px")
+		 $("#right3").css("right", "0px")
+		} else {
+			$("#view3").css("display", "block")
+			$("#right3").css("width", "500px")
+			$("#right3").css("right", "50px")
+		}
+
+	}
+	// 百度地图API功能
+
+
+	var map = new BMap.Map("container"); // 创建Map实例
+	map.setMapType(BMAP_HYBRID_MAP)
+
+
+
+	map.setCurrentCity("北京"); // 设置地图显示的城市 此项是必须设置的
+	map.enableScrollWheelZoom(true);
+
+
+	//查询当前客户是否有楼层
+	function islouceng() {
+
+		var req = {
+
+			cid: guster.customerId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "monitor/customers/customerIfFloorMapByCid",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				console.log(data)
+				if (data.success && data.result) {
+					//有楼层
+					window.location.href = "louceng_kh.html"
+				} else {
+					//无楼层
+					window.location.href = "data-floor.html"
+				}
+
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+
+	function addMarker() {
+		var myIcon = new BMap.Icon(requestConf.domain + "sys/common/view/" + guster.customerLogo, new BMap.Size(
+			64, 64));
+		var point = new BMap.Point(guster.longitude, guster.latitude); //添加一个标注
+
+		var marker = new BMap.Marker(point, {
+			icon: myIcon
+		});
+
+
+		marker.addEventListener("click", function() {
+
+			islouceng()
+		});
+		marker.setLabel(setLabelStyle(guster.customerName));
+		map.centerAndZoom(new BMap.Point(guster.longitude, guster.latitude), 6); // 初始化地图,设置中心点坐标和地图级别
+		map.addOverlay(marker);
+	}
+
+	function setLabelStyle(content) {
+		//左偏移  右偏移
+		var offsetSize = new BMap.Size(-73, -92);
+		var labelStyle = {
+			color: "#fff",
+			backgroundColor: "#333333",
+			border: "0",
+			fontSize: "14px",
+			width: "178px",
+			opacity: "0.8",
+			verticalAlign: "center",
+			borderRadius: "2px",
+			whiteSpace: "normal",
+			wordWrap: "break-word",
+			padding: "7px",
+		};
+		//用于设置样式
+		var spanA = "<span class='angle'><span>"
+		//不同数字长度需要设置不同的样式。
+		var num = parseInt(content.length / 10)
+		// switch (num) {
+		// 	case 0:
+		// 		offsetSize = new BMap.Size(-20, -40);
+		// 		break;
+		// 	case 1:
+		// 		offsetSize = new BMap.Size(-20, -40);
+		// 		break;
+		// 	case 2:
+		// 		offsetSize = new BMap.Size(-20, -60);
+		// 		break;
+		// 	case 3:
+		// 		offsetSize = new BMap.Size(-20, -80);
+		// 		break;
+		// 	default:
+		// 		break;
+		// 	}
+		var con = '<div style="height:30px;line-height:30px"><div id="" class="yuan">' +
+			'</div>' + content + '</div>' +
+			'<div style="height:30px;line-height:30px"><div id="" class="yuan1"></div>设备数量:<text style="color:green;font-weight:900;margin-left:8px">9</text></div>';
+		var label = new BMap.Label(con + spanA, {
+			offset: offsetSize
+		});
+		label.setStyle(labelStyle);
+		return label;
+	}
+
+	// function show1() {
+	// 	$("#view1").css("display", "none")
+	// }
+	//客户设备情况
+	function yhsbqk_left() {
+		var req = {
+
+			cid: guster.customerId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "monitor/alarmRecord/queryAlarmCountByCid",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				console.log(data)
+				let op2 = [];
+				var obj1, obj2, obj3 = {}
+				if (data.success) {
+
+					obj1 = {
+						name: "探测器",
+						value: data.result.detectorCount
+					}
+					obj2 = {
+						name: "控制器",
+						value: data.result.controllerCount
+					}
+					obj3 = {
+						name: "输出模块",
+						value: data.result.outCount
+					}
+					op2.push(obj1)
+					op2.push(obj2)
+					op2.push(obj3)
+					option = {
+						color:["#ffca2a","#fb5656","#3f80ff"],
+						tooltip: {
+							trigger: 'item',
+							formatter: '{a} <br/>{b}: {c} ({d}%)'
+						},
+                         graphic:[{
+                                 type:'text',
+                                 left:'center',
+                                 top:'35%',
+                                 z:10,
+                                 style:{
+                                     text:data.result.count,
+                                     font: '20px Microsoft YaHei',
+                         			 fill:'#ff5500'
+                                 }
+                             },{
+						        type:'text',
+						        left:'center',
+						        top:'55%',
+						        z:10,
+						        style:{
+									fill:'#ffffff',
+						            text:"报警统计",
+						            font: '12px Microsoft YaHei'
+						        }
+						    }],
+						series: [{
+							labelLine: {
+								normal: {
+									length: 10, // 改变标示线的长度
+									lineStyle: {
+										color: "red" // 改变标示线的颜色
+									}
+								},
+							},
+							label: {
+								normal: {
+									textStyle: {
+										color: '#FFFFFF' // 改变标示文字的颜色
+									}
+								}
+							},
+							name: '',
+							type: 'pie',
+							radius: ['50%', '70%'],
+							avoidLabelOverlap: false,
+							
+							data: op2
+						}]
+					};
+					let myChart2 = echarts.init(document.getElementById('main2'));
+					myChart2.setOption(option);
+
+
+				}
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+
+	function yhsbqk_right() {
+		var req = {
+
+			cid: guster.customerId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "monitor/device/queryDeviceTypeCountByCid",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				console.log(data)
+				let op2 = [];
+				var obj1, obj2, obj3 = {}
+				if (data.success) {
+
+					obj1 = {
+						name: "探测器",
+						value: data.result.detectorCount
+					}
+					obj2 = {
+						name: "控制器",
+						value: data.result.controllerCount
+					}
+					obj3 = {
+						name: "输入模块",
+						value: data.result.outCount
+					}
+					op2.push(obj1)
+					op2.push(obj2)
+					op2.push(obj3)
+					option = {
+						color:["#ffca2a","#fb5656","#3f80ff"],
+						tooltip: {
+							trigger: 'item',
+							formatter: '{a} <br/>{b}: {c} ({d}%)'
+						},
+                        graphic:[{
+                                type:'text',
+                                left:'center',
+                                top:'35%',
+                                z:10,
+                                style:{
+                                    text:data.result.count,
+                                    font: '20px Microsoft YaHei',
+                        			 fill:'#ff5500'
+                                }
+                            },{
+						        type:'text',
+						        left:'center',
+						        top:'55%',
+						        z:10,
+						        style:{
+									fill:'#ffffff',
+						            text:"设备总量",
+						            font: '12px Microsoft YaHei'
+						        }
+						    }],
+						series: [{
+							name: '',
+							type: 'pie',
+							radius: ['50%', '70%'],
+							avoidLabelOverlap: false,
+							labelLine: {
+								normal: {
+									length: 10, // 改变标示线的长度
+									lineStyle: {
+										color: "red" // 改变标示线的颜色
+									}
+								},
+							},
+							label: {
+								normal: {
+									textStyle: {
+										color: '#FFFFFF' // 改变标示文字的颜色
+									}
+								}
+							},
+							data: op2
+						}]
+					};
+					let myChart3 = echarts.init(document.getElementById('main3'));
+					myChart3.setOption(option);
+
+
+				}
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+	//设备情况
+	function sbqk() {
+		var req = {
+
+			customerId: guster.customerId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "monitor/device/selectDeviceCount",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				if(data.message=="Token失效，请重新登录"){
+					localStorage.clear()
+					clearInterval()
+					window.location.href="index.html"
+				}
+				//总数定30
+				console.log(data)
+				var normal = data.result.deviceNormalCount
+				var weihu = data.result.deviceDefendCount
+				var sbgz = data.result.deviceFaultCount
+				var txgz = data.result.deviceCommFailCount
+				var bjsb = data.result.deviceAlertCount
+
+				if (data.success) {
+					$("#zhu1").css("height", (1 - normal / 30) * 100 + "px")
+					$("#zhu2").css("height", (1 - weihu / 30) * 100 + "px")
+					$("#zhu3").css("height", (1 - sbgz / 30) * 100 + "px")
+					$("#zhu4").css("height", (1 - txgz / 30) * 100 + "px")
+					$("#zhu5").css("height", (1 - bjsb / 30) * 100 + "px")
+				}
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+	//退出
+	function logout() {
+		jeBox({
+			cell: "jbx",
+			title: "退出",
+			boxSize: ["300px", "150px"],
+			content: '<div style="font-size:18px;padding: 0px 10px;">确定要退出系统么？</div>',
+			maskLock: true,
+			btnAlign: "right",
+			button: [{
+					name: '确定',
+					callback: function(index) {
+						var req = {
+		
+							uid: guster.userId
+		
+						}
+		
+						$.ajax({
+		
+							url: requestConf.domain + "sys/logout1",
+							type: "get",
+							// contentType: "application/json",
+							dataType: "json",
+							data: req,
+							beforeSend: function(request) {
+								request.setRequestHeader("X-Access-Token",
+									guster.token
+								);
+		
+							},
+							success: function(data) {
+								console.log(data)
+		
+								if (data.success) {
+									localStorage.clear()
+		
+									window.location.href = "index_kh.html"
+								}
+							},
+							error: function() {
+								console.log("请求失败");
+							}
+						});
+					}
+				},
+				{
+					name: '取消'
+				}
+			]
+		})
+	}
+
+	function ssbjall() {
+		var req = {
+
+			id: guster.customerId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "monitor/alarmRecord/queryAlarmRecordById",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				$("#table").empty();
+				console.log(data)
+				var table_datas = "";
+				if (data.success) {
+					$.each(data.result, function(i, item) {
+						table_datas += '<tr>' +
+							'<td>' + item.alarmTime + '</td>' +
+							'<td>' + item.installationPosition + '</td>' +
+							'<td>' + item.deviceNum + '</td>' +
+							'<td style="color: aqua;">' + item.statusType + '</td>' +
+							'</tr>'
+					})
+					$("#table").append(table_datas);
+				}
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+
+
+
+	function jilu() {
+		clearInterval(timestamp)
+		console.log("jilu")
+		document.getElementById("ssjl").style.backgroundColor = "#1d4555"
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = ""
+		window.location.href = "data-floor_kh.html"
+
+	}
+
+	function heade() {
+		console.log("head")
+		document.getElementById("bjjl").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("sy").style.backgroundColor = "#1d4555"
+	}
+
+	function alarm() {
+		clearInterval(timestamp)
+		console.log("alarm")
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = "#1d4555"
+		window.location.href = "call_kh.html"
+	}
+</script>

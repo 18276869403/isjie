@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>是杰安全云</title>
+		
+		<script src="./js/request.js" type="text/javascript" charset="utf-8"></script>
+		<!-- <script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		 <script src="js/province.js" type="text/javascript" charset="utf-8"></script> -->
+		<!-- <script src="js/echarts.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ec.js" type="text/javascript" charset="utf-8"></script> -->
+		<script src="./js/quanxianrenzheng.js"></script>
+		<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/louceng_kh.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
+			.sbinlouceng {
+			
+				width: 80px;
+				background-color: #000000;
+				color: #E9ECEF;
+				text-align: center;
+				border-radius: 10px;
+				height: 30px;
+				line-height: 30px;
+				position: absolute;
+			}
+			.sbinloucengimg {
+			
+				width: 50px;
+				
+				height: 50px;
+				position: absolute;
+			}
+			.tipssanjiao{
+				width: 32px;
+				height: 32px;
+			}
+			          
+
+			/* #container {
+				min-width: 1920px;
+				min-height: 960px;
+
+				overflow: hidden;
+			} */
+
+			.angle {
+				display: inline-block;
+				width: 0px;
+				height: 0px;
+				position: absolute;
+				bottom: -60px;
+				border: 14px solid;
+				left: 15px;
+				bottom: -25px;
+				opacity: 0.8;
+				border-color: #333333 transparent transparent transparent;
+			}
+
+			.yuan {
+				
+				width: 8px;
+				height: 8px;
+				border-radius: 8px;
+				float: left;
+				margin-top: 6px;
+				margin-left: 3px;
+				margin-right: 6px;
+			}
+			 .circle1{
+			 	background-color: #E96629;
+			 }
+			.circle2{
+				background-color: #41C8A6;
+			}
+			.circle3{
+				background-color: #F9D345;
+			}
+			.circle4{
+				background-color: #993FB8;
+			}
+			.circle5{
+				background-color: #E41D15;
+			}
+		</style>
+		<!-- <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=PnOLHS34HgAmAEyKylVyecVz0Q2lnZmZ"></script> -->
+
+	</head>
+	<body>
+
+		<div id="head" style="display: block;position: relative;height: 60px;width: 100%;background-color: #000000;z-index: 99999;border-bottom: 1px solid #4d5b65;">
+			<img src="img/logo.jpg" style="margin-top: 10px;margin-left: 20px;float: left;">
+			<div id="" style="float: left;font-size: 16px;color: #FFFFFF;line-height: 60px;">
+				杰安全云
+			</div>
+			<div id="all" style="float: left;color: #FFFFFF;font-size: 16px;line-height:60px;width: 24%;text-align: center;margin-left: 27%;">
+				<div onclick="heade()" id="sy" style="width: 33.33%;float: left;background-color: #1d4555;">
+					首页
+				</div>
+				<div onclick="jilu()" id="ssjl" style="width: 33.33%;float: left;">
+					实施列表
+				</div>
+				<div onclick="alarm()" id="bjjl" style="width: 33.33%;float: left;">
+					历史记录
+				</div>
+			</div>
+
+			<div id="user_l" style="float: right;color: #FFFFFF;line-height: 60px;font-size: 15px;margin-right: 20px;">
+				<img onclick="logout()" src="img/shezhi@1x.png" style="margin-top: 16px;margin-left: 8px;float: right;">
+				<span id="">
+					当前登陆用户:<span style="margin: 0px 10px;" id="name_l">
+
+					</span>
+				</span>
+
+
+			</div>
+		</div>
+		<div id="" style="background-image: url(img/beijing@1x.png);width: 100%;height: 969px;overflow: hidden;position: relative;">
+			<div id="left_content" style="float: left;width: 15%;height: 929px;display: block;">
+				<table border="1px" cellspacing="0" cellpadding="10" style="border-color: #2b4d9b;border-width: 1px;width: 90%;margin: 0 auto;margin-top: 20px;color: #FFFFFF;text-align: center;">
+
+					<tr>
+						<th style="font-weight: 100;">楼层名称</th>
+						<th></th>
+					</tr>
+					<tbody id="loucengall">
+
+					</tbody>
+
+				</table>
+				<div id="" style="margin-top: 50px;">
+					<div id="" style="text-align: center;color: #6de7ff;height: 50px;line-height: 50px;border-bottom: 1px solid #343a62;font-size: 16px;">
+						本企业设备情况
+					</div>
+					<div id="" style="">
+						<div id="" style="width: 90%;margin: 0 auto;margin-top: 20px;text-align: center;font-weight: 700;color: #b7b9c3;">
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<div id="allcount" style="color:#ffca2a;font-size: 20px;">
+									0
+								</div>
+
+								<div id="">
+									设备总数
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<div id="normalcount" style="color: #29d197;font-size: 20px;">
+									0
+								</div>
+
+								<div id="">
+									正常设备
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+
+								<div id="whsb" style="color: #1690f1;font-size: 20px;">
+									23
+								</div>
+								<div id="">
+									维护设备
+								</div>
+							</div>
+						</div>
+						<div id="" style="clear: both;"></div>
+						<div id="" style="width: 90%;margin: 0 auto;margin-top: 50px;text-align: center;font-weight: 700;color: #b7b9c3;">
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+
+								<div id="gzsb" style="color: #c91913;font-size: 20px;">
+									23
+								</div>
+								<div id="">
+									设备故障
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+
+								<div id="txgz" style="color: #973dbd;font-size: 20px;">
+									23
+								</div>
+								<div id="">
+									通讯故障
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+
+								<div id="bjsb" style="color: #f08400;font-size: 20px;">
+									23
+								</div>
+								<div id="">
+									报警设备
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="" style="margin-top: 100px;">
+					<div id="" style="text-align: center;color: #6de7ff;height: 50px;line-height: 50px;border-bottom: 1px solid #343a62;font-size: 16px;">
+						本层总设备情况
+					</div>
+					<div id="" style="">
+						<div id="" style="width: 90%;margin: 0 auto;margin-top: 20px;text-align: center;font-weight: 700;color: #b7b9c3;">
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_all" style="color:#ffca2a;font-size: 20px;">
+									0
+								</span>
+
+								<div id="">
+									设备总数
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_normal" style="color: #29d197;font-size: 20px;">
+									0
+								</span>
+								<div id="">
+									正常设备
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_whsb" style="color: #1690f1;font-size: 20px;">
+									0
+								</span>
+								<div id="">
+									维护设备
+								</div>
+							</div>
+						</div>
+						<div id="" style="clear: both;"></div>
+						<div id="" style="width: 90%;margin: 0 auto;margin-top: 50px;text-align: center;font-weight: 700;color: #b7b9c3;">
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_gzsb" style="color: #c91913;font-size: 20px;">
+									0
+								</span>
+								<div id="">
+									设备故障
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_txgz" style="color: #973dbd;font-size: 20px;">
+									0
+								</span>
+								<div id="">
+									通讯故障
+								</div>
+							</div>
+							<div id="" style="float: left;width: 30%;border: 1px solid #2b4d9b;height: 50px;margin-left: 2%;line-height: 50px;">
+								<span id="self_bjsb" style="color: #f08400;font-size: 20px;">
+									0
+								</span>
+								<div id="">
+									报警设备
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="" onclick="hidden_left()" style="float: left;height: 929px;display: block;line-height: 929px;">
+				<img style="height: 30px;width: 30px;" src="img/point.png">
+			</div>
+			<div id="planPic" style="position: relative;float: right;width: 83%;background-size: 1920px 969px;height: 969px;background-repeat:no-repeat;border-top: 2px solid #4e5f6b;">
+				<div id="dev_popuo"  style="z-index: 9999999999;display: none;position: absolute;background-color: #696d78;color: #e4e5e7;border-radius: 10px;padding: 10px;">
+					<!-- <div id="" style="margin: 10px 0px;">
+						设备IMEI:<span id="deviceImei"></span>
+					</div>
+					<div id="" style="margin: 10px 0px;">
+						设备型号:<span id="deviceType" style="color: #06dae1;"></span>
+					</div>
+					<div id="" style="margin: 10px 0px;">
+						<label>量程:<span id="ranges" style="color: #06dae1;"></span></label>
+						<label>单位:<span id="unit" style="color: #06dae1;"></span></label>
+					</div>
+					<div id="" style="margin: 10px 0px;">
+						<label>状态:<span id="statusType" style="color: #2fc794;"></span></label>
+						<label>检测值:<span id="testPv" style="color: #06dae1;"></span></label>
+					</div>
+					<div id="" style="margin: 10px 0px;">
+						采集事件:<span id="cjsj"></span>
+					</div> -->
+					<div id="" style="margin: 10px 0px;">
+						<div id="" class="yuan circle1"></div>设备IMEI:<span id="deviceImei"></span>
+					</div>
+					<div id="" style="margin: 10px 0px;clear: both;">
+						<div id="" class="yuan circle2"></div>
+						设备型号:<span id="deviceType" style="color: #06dae1;"></span>
+					</div>
+					<div id="" style="margin: 10px 0px;clear: both;">
+						<div id="" class="yuan circle3"></div>
+						<label>量程:<span id="ranges" style="color: #06dae1;"></span></label>
+						<label>单位:<span id="unit" style="color: #06dae1;"></span></label>
+					</div>
+					<div id="" style="margin: 10px 0px;clear: both;">
+						<div id="" class="yuan circle4"></div>
+						<label>状态:<span id="statusType" style="color: #2fc794;"></span></label>
+						<label>检测值:<span id="testPv" style="color: #06dae1;"></span></label>
+					</div>
+					<div id="" style="margin: 10px 0px;clear: both;">
+						<div id="" class="yuan circle5"></div>
+						采集时间:<span id="cjsj"></span>
+					</div>
+					<img src="img/sanjiao.png" style="position: absolute;bottom:-24px;left: 40%;">
+				</div>
+
+				<div id="louceng_dev" style="position: absolute;top: 50px;left: 30px;opacity: 1 !important;">
+					<!-- <img src="img/Kshebeiguzhang@1X.png" > -->
+				</div>
+				<div id="" onclick="allscreen()" style="position: absolute;right: 30px;top: 20px;">
+					<div id="" style="padding: 5px;width:50px;height: 50px;background-color: #2CC290;opacity: 0.5;text-align: center;">
+						<img src="img/quanpin@1x.png" style="height: 20px;width: 20px;">
+						<div id="state" style="color: #FFFFFF;opacity: 1;">
+							全屏
+						</div>
+					</div>
+				</div>
+				<div id="" style="position: absolute;right: 30px;top: 90px;">
+					<div id="" style="position: relative;padding: 5px;width:50px;height: 50px;background-color: #2CC290;opacity: 0.5;text-align: center;">
+						<img src="img/fangda@1x.png" style="height: 20px;width: 20px;">
+
+					</div>
+					<div id="" style="position: absolute;top: 30px;right: 13px;color: #FFFFFF;opacity: 1;font-weight: 900;">
+						放大
+					</div>
+				</div>
+				<div id="" style="position: absolute;right: 30px;top: 160px;">
+					<div id="" style="padding: 5px;width:50px;height: 50px;background-color: #2CC290;opacity: 0.5;text-align: center;">
+						<img src="img/suoxiao@1x.png" style="height: 20px;width: 20px;">
+						<div id="" style="color: #FFFFFF;opacity: 1;">
+							缩小
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
+
+<script type="text/javascript">
+	var hei = window.innerHeight;
+	var state = false;
+	$("#user_l").find("span[id=name_l]").text(guster.webName)
+
+	function allscreen() {
+
+
+
+
+
+		state = !state
+
+		if (state) {
+			document.getElementById("left_content").style.display = "none"
+			document.getElementById("left_content").style.width = "0%"
+			document.getElementById("head").style.display = "none"
+			$("#planPic").css("width", "98%")
+			document.getElementById("right_content").style.height = hei + "px"
+			document.getElementById('state').innerHTML = '推出'
+
+		} else {
+			document.getElementById("left_content").style.display = "block"
+			document.getElementById("left_content").style.width = "15%"
+			document.getElementById("head").style.display = "block"
+			$("#planPic").css("width", "83%")
+			document.getElementById('state').innerHTML = '全屏'
+
+		}
+
+
+
+	}
+
+	function jilu() {
+		console.log("jilu")
+		document.getElementById("ssjl").style.backgroundColor = "#1d4555"
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = ""
+		window.location.href = "data-floor_kh.html"
+	}
+
+	function heade() {
+		console.log("head")
+		document.getElementById("bjjl").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("sy").style.backgroundColor = "#1d4555"
+		window.location.href = "map_kh.html"
+	}
+
+	function alarm() {
+		console.log("alarm")
+		document.getElementById("sy").style.backgroundColor = ""
+		document.getElementById("ssjl").style.backgroundColor = ""
+		document.getElementById("bjjl").style.backgroundColor = "#1d4555"
+		window.location.href = "call_kh.html"
+	}
+
+	function tosingle(obj) {
+		console.log(obj)
+		localStorage.setItem("deviceType", obj.deviceType)
+		localStorage.setItem("sbdz", obj.addressNumber)
+		localStorage.setItem("testDeviceImei", obj.deviceImei)
+
+		window.location.href = "data-floor_kh.html"
+	}
+
+	function hidden_left() {
+		state = !state
+		if (state) {
+			$("#left_content").css("width", "0%")
+			$("#left_content").css("display", "none")
+			$("#planPic").css("width", "98%")
+		} else {
+			$("#left_content").css("width", "15%")
+			$("#left_content").css("display", "block")
+			$("#planPic").css("width", "83%")
+		}
+
+
+	}
+	//退出
+	function logout() {
+		var req = {
+
+			uid: guster.userId
+
+		}
+
+		$.ajax({
+
+			url: requestConf.domain + "sys/logout1",
+			type: "get",
+			// contentType: "application/json",
+			dataType: "json",
+			data: req,
+			beforeSend: function(request) {
+				request.setRequestHeader("X-Access-Token",
+					guster.token
+				);
+
+			},
+			success: function(data) {
+				console.log(data)
+
+				if (data.success) {
+					localStorage.clear()
+					window.location.href = "index_kh.html"
+				}
+			},
+			error: function() {
+				console.log("请求失败");
+			}
+		});
+	}
+</script>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.AlarmRecordVoMapper">
+
+	<!--前端报警记录-->
+	<select id="selectAlarmAll" resultType="org.jeecg.modules.demo.monitor.vo.AlarmRecordVo">
+		select 
+		a.id
+		,a.Alarm_time,a.Alarm_deviceImei,a.Alarm_address,
+		a.T_status as Alarm_state,
+		case when a.Alarm_pv  = 0 then '-' else CONCAT(0+cast(a.Alarm_pv*d.Reduction_coefficient as char),d.Unit) end as Alarm_pv,
+		d.Device_type alarmDeviceType,d.Device_type T_status,
+		a1.Area_name oneAreaName,a2.Area_name twoAreaName,
+		c.`name`,
+		f.id as floorId,
+		case when c.Project_name is null then '-' else c.Project_name end as Project_name,
+		d.id as deviceId,
+		d.Customer_id,d.Detection_target,CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,d.Unit,
+		case when d.Installation_position != '' then  CONCAT(d.Device_num,'/',d.Installation_position) else d.Device_num end as Device_num,
+		d.Device_positionNum
+		,d.Device_model as deviceModel
+		from alarm_record a
+		LEFT JOIN device d on d.id = a.backup2
+		LEFT JOIN customers c on c.id = d.Customer_id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id = c.Two_area_id
+		LEFT JOIN device_floorplan df on (df.device_id=d.Id and df.x_axis  is not null and df.x_axis != '')
+		LEFT JOIN floor_plan f on f.Id = df.floorPlan_id
+		${ew.customSqlSegment}
+	</select>
+	<!--后台报警记录-->
+	<select id="selectAlarmVoAll" resultType="org.jeecg.modules.demo.monitor.vo.AlarmRecordVo">
+		select
+		a.Id,a.Alarm_time,a.Alarm_deviceImei,a.Alarm_address,
+		a.Alarm_state,
+		case when a.Alarm_pv  = 0 then '-' else CONCAT(0+cast(a.Alarm_pv*d.Reduction_coefficient as char),d.Unit) end as Alarm_pv,
+		d.Device_type alarmDeviceType,a.T_status,
+		a1.Area_name oneAreaName,a2.Area_name twoAreaName,
+		c.id,c.`name`,c.Project_name,
+		d.Id,d.Customer_id,d.Detection_target,CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,d.Unit,
+		CONCAT(d.Device_num,'/',d.Installation_position) as Device_num,
+		d.Device_positionNum
+		from alarm_record a
+		LEFT JOIN device d on d.Device_imei = a.Alarm_deviceImei and d.Address_number = a.Alarm_address
+		LEFT JOIN customers c on c.id = d.Customer_id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id = c.Two_area_id
+		${ew.customSqlSegment}
+	</select>
+	
+	<!-- 
+		d.Device_imei = a.Alarm_deviceImei and d.Address_number = a.Alarm_address
+	 -->
+	<select id="exportXlsAlarmAll" resultType="org.jeecg.modules.demo.monitor.vo.AlarmRecordVo">
+		select 
+		a.Id
+		,a.Alarm_time,a.Alarm_deviceImei,a.Alarm_address,
+		a.Alarm_state,
+		case when a.Alarm_pv  = 0 then '-' else CONCAT(0+cast(a.Alarm_pv*d.Reduction_coefficient as char),d.Unit) end as Alarm_pv,
+		d.Device_type alarmDeviceType,a.T_status,
+		a1.Area_name oneAreaName,a2.Area_name twoAreaName,
+		c.id,c.`name`,
+		case when c.Project_name is null then '-' else c.Project_name end as Project_name,
+		d.Id,d.Customer_id,d.Detection_target,CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,d.Unit,
+		CONCAT(d.Device_num,'/',ifnull(d.Installation_position,'')) as Device_num,
+		d.Device_positionNum,
+		f.Floor_name
+		,d.Device_model as deviceModel
+		from alarm_record a
+		LEFT JOIN device d on d.id = a.backUp2 
+		LEFT JOIN customers c on c.id = d.Customer_id
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+		LEFT JOIN area a2 on a2.id = c.Two_area_id
+		LEFT JOIN device_floorplan df on (df.device_id=d.Id and df.x_axis is not
+		null and df.x_axis != '')
+		LEFT JOIN floor_plan f on f.Id = df.floorPlan_id
+		<!-- left join distribution dis on dis.Customer_id = c.id -->
+		${ew.customSqlSegment}
+	</select>
+
+	<!-- 根据id查询实时报警情况窗口 -->
+	<select id="queryAlarmRecordById"
+		resultType="org.jeecg.modules.demo.monitor.vo.AlarmWindowVo">
+	SELECT distinct
+		a.Alarm_time,
+		d.Customer_id,
+		d.id as deviceId,
+		case when d.Installation_position is null then '-' else d.Installation_position  end as Installation_position,
+		d.Device_num,
+		a.T_status as status_type
+		from (select max(Alarm_time) Alarm_time,Alarm_address,Alarm_deviceImei from alarm_record  group by Alarm_address,Alarm_deviceImei ) a1
+		INNER JOIN alarm_record a on a1.Alarm_time = a.Alarm_time and a1.Alarm_deviceImei = a.Alarm_deviceImei and a1.Alarm_address = a.Alarm_address
+		LEFT JOIN device d on
+		a.Alarm_deviceImei=d.Device_imei and a.Alarm_address=d.Address_number
+		LEFT JOIN customers c on d.Customer_id=c.id WHERE c.id = #{id}
+		and d.status_type like '%警%'
+		ORDER BY a.Alarm_time DESC;
+	</select>
+
+	<!-- 根据id查询用户登录所有客户实时报警情况窗口 -->
+	<select id="queryAlarmRecordByUid" resultType="org.jeecg.modules.demo.monitor.vo.AlarmWindowVo">
+			SELECT
+			d.BackUp1 Alarm_time,
+			 d.Customer_id,
+			 d.id as deviceId,
+ -- 		对安装位置进行判空替换
+			case when d.Installation_position is null then '-' else d.Installation_position  end as Installation_position,
+			d.Device_num,d.status_type status_type,d.id
+			from (select max(Alarm_time) Alarm_time,backup2 from alarm_record  group by backup2 ) a1
+			INNER JOIN alarm_record a on a1.Alarm_time = a.Alarm_time and a1.backup2 = a1.backup2 
+			inner JOIN device d on a.backup2 = d.backup2 
+			inner JOIN customers c on d.Customer_id=c.id
+      		where d.status_type like '%警%' and  
+	      		(
+					ifnull(d.device_area_id,'0')  in( 
+						select '0' union
+						select a.customer_id from distribution a
+						where a.user_id = #{uid}
+					)
+					and d.Customer_id in(
+						select dr.Customer_id from distribution a
+						left join device dr on a.customer_id = dr.device_area_id
+						where a.user_id = #{uid}
+						
+						union
+						
+						select a.Customer_id from distribution a
+						where a.user_id = #{uid}
+					)
+				)
+			GROUP BY id
+			ORDER BY  d.id desc ;
+	</select>
+
+	<!--前端设备实时报警记录-->
+	<select id="selectDeviceRealAlarm" resultType="org.jeecg.modules.demo.monitor.vo.AlarmRecordVo">
+		select 
+		a.id
+		,a.Alarm_time,a.Alarm_deviceImei,a.Alarm_address,
+		a.T_status as Alarm_state,
+		case when a.Alarm_pv  = 0 then '-' else CONCAT(0+cast(a.Alarm_pv*d.Reduction_coefficient as char),d.Unit) end as Alarm_pv,
+		d.Device_type alarmDeviceType,d.Device_type T_status,   
+		d.id as deviceId,
+		d.Customer_id,d.Detection_target,CONCAT(0+cast(d.Ranges as char),d.Unit) as Ranges,d.Unit,
+		-- 对设备编号进行替换
+		case when d.Installation_position != '' then  CONCAT(d.Device_num,'/',d.Installation_position) else d.Device_num end as Device_num,
+		d.Device_positionNum
+		,d.Device_model as deviceModel
+		from device d 
+		left join  (
+			select * from alarm_record as sa 
+			where sa.id in( 
+				select max(sa.id) from alarm_record as sa 
+				where sa.Alarm_state = '0'
+				group by sa.backup2
+			) 
+		) a
+				on d.id = a.BackUp2   
+		${ew.customSqlSegment}
+	</select>
+</mapper>
