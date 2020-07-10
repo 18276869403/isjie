@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.CustomersMapper">
+
+	<!-- 客户列表信息 -->
+	<select id="queryCustomersVoAll"
+		resultType="org.jeecg.modules.demo.monitor.vo.CustomersVo">
+		SELECT a1.Area_name as oneAreaName,
+		a2.Area_name as
+		twoAreaName,
+		c.id,
+		c.One_area_id,
+		c.Two_area_id,
+		c.`name`,
+		c.Project_name,
+		c.Detailed_address,
+		c.longitude,
+		c.latitude,
+		c.Cust_logo,
+		c.biao_zhu_logo,
+		c.BackUp1,
+		c.Web_name,
+		c.create_by,
+		c.create_time,
+		c.update_by,
+		c.update_time,
+		c.del_flag
+		from
+		customers c
+		LEFT JOIN area a1 on a1.id = c.One_area_id
+<!--		 LEFT JOIN distribution dis on dis.customer_id = c.id-->
+		LEFT JOIN area a2
+		on a2.id = c.Two_area_id
+		${ew.customSqlSegment} and ifnull(c.del_flag, 0) = 0
+	</select>
+
+	<!-- 根据城市查询客户 -->
+	<select id="findCutByAreaId" resultType="java.util.Map">
+		select c.id,c.name as
+		label,c.One_area_id,c.Two_area_id,a1.Area_name,a2.Area_name
+		from
+		customers c
+		INNER JOIN area a1 on a1.id = c.One_area_id
+		INNER JOIN area
+		a2 on a2.id = c.Two_area_id and a2.id = #{areaId}
+		where ifnull(c.del_flag, 0) = 0
+	</select>
+	<select id="findCustomerNameById"
+		resultType="org.jeecg.modules.demo.monitor.entity.Customers">
+		select * from customers where ifnull(c.del_flag, 0) = 0;
+	</select>
+
+	<select id="queryAllByCustId"
+		resultType="org.jeecg.modules.demo.monitor.vo.CustomersVo">
+		SELECT a.name,a1.Area_name oneAreaName,a2.Area_name
+		twoAreaName,a.*
+		from customers a
+		LEFT JOIN area a1 on a1.id =
+		a.One_area_id
+		LEFT JOIN area a2 on a2.id = a.Two_area_id 
+		WHERE a.id = #{customerId}
+			and ifnull(a.del_flag, 0) = 0
+	</select>
+
+
+
+	<!-- 前端查询客户列表信息 -->
+	<select id="queryCustomersVoAllById"
+		resultType="org.jeecg.modules.demo.monitor.vo.CustomersVo">
+
+		SELECT a.name,a1.Area_name oneAreaName,a2.Area_name
+		twoAreaName,a.name,a.latitude,a.longitude,a.Cust_logo,a.Web_name
+		from
+		customers a
+		LEFT JOIN area a1 on a1.id = a.One_area_id
+		LEFT JOIN area a2
+		on a2.id = a.Two_area_id WHERE a.id = #{id}
+		where ifnull(a.del_flag, 0) = 0
+
+	</select>
+
+	<!-- 根据id查客户设备报警总数量 -->
+	<select id="queryDeviceAlarmById" resultType="java.lang.Integer">
+		SELECT
+		count(a.T_status) count
+		from device d
+		LEFT JOIN customers c on d.Customer_id=c.id
+		LEFT JOIN alarm_record a on d.Device_imei=a.Alarm_deviceImei and
+		d.Address_number=a.Alarm_address
+		where c.id = #{id} and ifnull(c.del_flag, 0) = 0
+	</select>
+
+	<!--根据用户id查询所有的客户id集合-->
+    <select id="queryCustomerIdByUid" resultType="java.lang.Integer">
+		select dr.Customer_id from distribution a
+		left join device dr on a.customer_id = dr.device_area_id
+		where a.user_id = #{uid} 
+		
+		union
+		
+		select a.Customer_id from distribution a
+		where a.user_id = #{uid}
+	</select>
+
+	<!-- 图标前端查询省份客户列表信息 -->
+	<select id="queryOneVoAllById"
+			resultType="org.jeecg.modules.demo.monitor.vo.LoadCustomersVo">
+		select
+				c.name,c.longitude,c.latitude,c.id,c.biao_zhu_logo Cust_logo,c.cust_logo logo
+			from  customers c
+			LEFT JOIN area a1 on a1.id = c.One_area_id 
+		where  ifnull(c.del_flag, 0) = 0
+			and c.One_area_id = #{pid}
+			and ifnull(c.del_flag, 0) = 0
+			and c.id in(
+				select dr.Customer_id from distribution a
+				left join device dr on a.customer_id = dr.device_area_id
+				where a.user_id = #{uid}
+				
+				union
+				
+				select a.Customer_id from distribution a
+				where a.user_id = #{uid}
+			)
+	</select>
+
+
+	<!-- 图标前端查询城市客户列表信息 -->
+	<select id="queryTowVoAllById"
+			resultType="org.jeecg.modules.demo.monitor.vo.LoadCustomersVo">
+		select
+		         c.name,c.longitude,c.latitude,c.id,c.biao_zhu_logo Cust_logo,c.Cust_logo logo
+			from  customers c
+			LEFT JOIN area a1 on a1.id = c.One_area_id
+		    inner JOIN area a2 on  a2.id = c.Two_area_id
+		where a1.id = #{pid}  and  a2.id=#{cid}
+			and ifnull(c.del_flag, 0) = 0
+			and c.id in(
+				select dr.Customer_id from distribution a
+				left join device dr on a.customer_id = dr.device_area_id
+				where a.user_id = #{uid}
+				
+				union
+				
+				select a.Customer_id from distribution a
+				where a.user_id = #{uid}
+			)
+	</select>
+
+
+
+	<!-- 图标前端查询客户列表信息 -->
+	<select id="queryCustomersVoAllBycustomerId"
+			resultType="org.jeecg.modules.demo.monitor.vo.LoadCustomersVo">
+		SELECT name,latitude,longitude,biao_zhu_logo Cust_logo,cust_logo logo
+		from customers
+		WHERE id = #{customerId} and ifnull(del_flag, 0) = 0
+	</select>
+
+	<!--根据客户id查询账号-->
+	<select id="findCustomerAccounts" resultType="org.jeecg.modules.demo.monitor.entity.CustomerAccounts">
+		select * from customer_accounts where Customer_id=#{customerId} and Short_letter = '1'
+	</select>
+
+	<select id="customerIfFloorMapByCid" resultType="org.jeecg.modules.demo.monitor.vo.FloorPlanDTO">
+ 				select
+            	Plan_pic planPic
+           		 from  floor_plan
+                 WHERE Customer_id =#{cid}
+
+	</select>
+	<select id="findCustomerByName" resultType="org.jeecg.modules.demo.monitor.entity.Customers">
+		select * from customers where name = #{name} limit 0,1
+	</select>
+    <select id="getLogo" resultType="org.jeecg.modules.demo.monitor.entity.Customers">
+		select c.* from customers  c
+		where c.id in(
+			select dr.Customer_id from distribution a
+			left join device dr on a.customer_id = dr.device_area_id
+			where a.user_id = #{cid}
+			
+			union
+			
+			select a.Customer_id from distribution a
+			where a.user_id = #{cid}
+		)
+		ORDER BY c.web_name desc,c.cust_logo desc limit 0,1
+	</select>
+
+
+</mapper>

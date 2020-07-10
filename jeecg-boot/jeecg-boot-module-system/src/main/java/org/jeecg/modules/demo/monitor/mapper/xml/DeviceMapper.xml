@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.DeviceMapper">
+    <delete id="deletefloordevice">
+		delete from device_floorplan where device_id = #{id}
+	</delete>
+	<delete id="deleteByCustomerId">
+		delete from device where Customer_id =#{customerId}
+	</delete>
+	<select id="custoMpage"
+		resultType="org.jeecg.modules.demo.monitor.vo.DeviceVo">
+		SELECT
+		d.Id,
+		d.Device_type,
+		d.Device_imei,
+		d.Device_positionNum,
+		d.Address_number,
+		d.Device_num,
+		CONCAT(d.Device_num,'/',d.Installation_position) AS deviceNum2,
+		d.Device_model,
+		d.Factory_num,
+		d.Detection_target,
+		d.Ranges,
+		CONCAT(0+cast(d.Ranges as char),d.Unit) AS Ranges1,
+		d.Unit,
+		d.Iccid,
+		d.Installation_position,
+		d.status_type,
+		c.One_area_id,
+		c.Two_area_id,
+		c.`name`,
+		c.Project_name,
+		c.Detailed_address,
+		c.longitude,
+		c.latitude,
+		a1.Area_name AS oneAreaName,
+		a2.Area_name AS twoAreaName,
+		d.Remark,
+		d.Reduction_coefficient,
+		d.Exceeding_alarm,
+		d.Customer_id,
+		d.create_time,
+		d.device_area_id,
+		da.area_name as deviceAreaName
+		from device d
+		left JOIN customers c on d.Customer_id=c.Id
+		left JOIN area a1 on a1.id = c.One_area_id
+		left JOIN area a2 on a2.id = c.Two_area_id
+		left join device_area da on da.id = d.device_area_id
+		${ew.customSqlSegment}
+	</select>
+
+	<update id="saveDeviceXY">
+		update device_floorplan set
+		x_axis=#{xaxis},y_axis=#{yaxis} where id=#{id}
+	</update>
+    <update id="updateByImeiAndAdd" parameterType="org.jeecg.modules.demo.monitor.vo.CaiJiVO">
+		update device 
+			set BackUp1=#{time},
+				BackUp2=#{pv},
+				status_type=#{status},
+				BackUp4=#{statusBit}
+		where Device_imei=#{imei} and Address_number = #{add}  
+	</update>
+    <update id="syncRealDataById" parameterType="java.util.List">
+   	 	<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+			update device 
+			<set>
+				<if test="item.time != null">
+					backUp1 = #{item.time},
+				</if>
+				<if test="item.pv != null">
+					backUp2 = #{item.pv},
+				</if>
+				<if test="item.rtStatus != null">
+					status_type = #{item.rtStatus},
+				</if>
+				<if test="item.statusBit != null">
+					backUp4 = #{item.statusBit},
+				</if>
+			</set>
+			where id = #{item.deviceId}
+		</foreach>
+	</update>
+
+    <select id="findDeviceByIdS"
+		resultType="org.jeecg.modules.demo.monitor.vo.DeviceDTO">
+		SELECT d.Id id,
+		d.Device_type deviceType,
+		d.Device_imei deviceImei,
+		d.device_num deviceNum,
+		d.status_type statusType
+		from
+		device d
+		WHERE d.Id in
+		<foreach collection="ids" item="id" open="(" close=")"
+			separator=",">
+			#{id}
+		</foreach>
+	</select>
+	<select id="findDeviceXYByDidAndFid"
+		resultType="org.jeecg.modules.demo.monitor.vo.XyAxisDTO">
+		select id, x_axis xaxis,y_axis yaxis from device_floorplan
+		where
+		device_Id=#{dId} and floorPlan_id=#{fid}
+		limit 1
+	</select>
+
+	<select id="findDeviceIdsByCid" resultType="java.lang.Integer">
+		select d.id from device d
+		where d.customer_id = #{id} and 
+		(ifnull(d.device_area_id,'0')  in( 
+				select '0' union
+				select a.customer_id from distribution a
+				where a.user_id = #{userId}
+			)
+		)
+	</select>
+	<insert id="saveDeviceXYByDidFid" useGeneratedKeys="true">
+		insert into
+		device_floorplan (customer_id,device_id,floorplan_id,x_axis,y_axis) values
+		(#{cid},#{did},#{fid},#{xaxis},#{yaxis})
+	</insert>
+	<!-- 根据id查设备的数量 -->
+	<select id="queryDeviceById" resultType="java.lang.Integer">
+		select COUNT(*)
+		from
+		device d
+		LEFT JOIN customers c on c.id = d.Customer_id where c.id =
+		#{id}
+	</select>
+	
+
+
+
+	<!-- 根据id查不同设备的数量 -->
+	<!-- 根据id查不同设备类型的数量 -->
+	<!-- <select id="queryDeviceDifferentById"
+		resultType="org.jeecg.modules.demo.monitor.entity.Device">
+		select device_type ,count(*)as num from (
+		select a.id
+		,a.Device_type
+		from device a
+		LEFT JOIN customers c on a.Customer_id=c.id
+		WHERE c.id = #{id}
+		) aa
+		GROUP BY device_type
+	</select>
+ -->
+
+	<select id="selectDeviceCount" resultType="java.lang.Integer">
+		select COUNT(*)
+		count
+		from device
+		where Customer_id=#{customerId}
+	</select>
+
+
+
+
+	<select id="selectCountDeviceByFlor"
+		resultType="java.lang.Integer">
+		select count(device_id) from device_floorplan where
+		customer_id=#{customerId} and floorPlan_id=#{floorId} and x_axis is not null and x_axis != ''
+	</select>
+
+	<select id="selectDeviceIds" resultType="java.lang.Integer">
+		select device_id from
+		device_floorplan where customer_id=#{customerId} and
+		floorPlan_id=#{floorId} and x_axis is not null and x_axis != ''
+	</select>
+
+
+
+	<select id="queryFloorDeviceByFid" resultType="org.jeecg.modules.demo.monitor.vo.DeviceInfoDTO">
+		select id ,
+			device_imei deviceImei,
+			device_num,
+			iccid iccid,
+		  	address_number addressNumber,
+			CONCAT(0+cast(Ranges as char),Unit) as Ranges,
+			device_Type deviceType,
+			unit,
+			status_type statusType,
+			Device_model deviceModel,
+			Detection_target as detectionTarget,
+			BackUp2 testPv
+		from device where id in
+		<foreach item="id" collection="ids" index="index" open="("
+				 separator="," close=")">
+			#{id}
+		</foreach>
+
+	</select>
+
+
+	<select id="queryDeviceIdsByCid" resultType="java.lang.Integer">
+		select id from device where customer_id=#{customerId}
+
+	</select>
+	<select id="queryDeviceStatusTypeByDids" resultType="java.lang.String">
+		select status_type from device where id in
+		<foreach item="id" collection="ids" index="index" open="("
+				 separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="queryDeviceTypeCountByDid" resultType="java.lang.Integer">
+		SELECT count(id)  from device WHERE  id in
+		<foreach item="id" collection="ids" index="index" open="("
+				 separator="," close=")">
+			#{id}
+		</foreach>
+		and Device_type =#{type}
+	</select>
+
+	<select id="findDtypeCountByDid" resultType="java.util.Map">
+		 SELECT Device_type,count(id) from device WHERE  id in
+		<foreach item="id" collection="ids" index="index" open="("
+				 separator="," close=")">
+			#{id}
+		</foreach>
+
+		GROUP BY Device_type
+	</select>
+
+	<select id="queryDeviceCount" resultType="java.lang.Integer">
+		select count(id) from device where id in
+		<foreach item="id" collection="ids" index="index" open="("
+				 separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="queryDeviceByImeiAndIccid" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+		select device_type,status_type,Reduction_coefficient,unit,backup1,backup2 from device 
+		where Device_imei=#{deviceImei} and address_number=#{addressNumber}
+		limit 1
+	</select>
+	<select id="findFloorByDeviceId"  resultType="java.lang.Integer">
+		select floorPlan_id from device_floorplan where  device_id = #{did} and x_axis is not null and x_axis != ''
+	</select>
+
+	<!--设备导出根据客户名查询客户id-->
+	<select id="findDeviceCust" resultType="org.jeecg.modules.demo.monitor.vo.DeviceVo">
+		SELECT c.id,c.`name`,d.Customer_id
+		from customers c
+		LEFT JOIN device d on d.Customer_id = c.id
+		where c.name = #{cname}
+	</select>
+
+	<select id="exportXls" resultType="org.jeecg.modules.demo.monitor.vo.DeviceVo">
+		SELECT  d.id,c.`name`,d.device_type,d.device_imei,d.device_positionnum,
+				d.iccid,d.address_number,d.device_num,d.device_model,d.factory_num,
+				d.detection_target,d.ranges,d.unit,d.status_type,d.reduction_coefficient,
+				d.installation_position,d.exceeding_alarm,d.remark,
+				da.area_name as deviceAreaName
+				FROM device d
+				LEFT JOIN customers c on c.id = d.Customer_id
+				LEFT JOIN device_area da on da.id = d.device_area_id
+				${ew.customSqlSegment}
+	</select>
+	<select id="findDeviceByImeiAndAdd" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+		select * from device where Device_imei = #{imei} and  Address_number =#{add}
+		<if test='type != "4G"'>
+			and iccid = #{iccid}
+		</if>
+		limit 1
+	</select>
+	<!--select d.id deviceId,f.floor_name from device d
+		inner join distribution di on di.Customer_id = d.Customer_id
+		INNER JOIN device_floorplan df on df.device_id = d.id
+		INNER join floor_plan f on df.floorPlan_id = f.id and df.x_axis!='' and df.x_axis is not null
+		group by did
+		select d.* from device d-->
+    <select id="queryAlarmdevice" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+
+		select d.* from device d
+		<where>
+			<if test="1==1">
+				d.status_type != '正常'
+			</if>
+			<if test="customerId!=0">
+				and d.Customer_id = #{customerId}
+			</if>
+			<if test="userId!=null">
+				ifnull(d.device_area_id,'0')  in( 
+					select '0' union
+					select a.customer_id from distribution a
+					where a.user_id = #{userId}
+				)
+				and d.Customer_id in(
+					select dr.Customer_id from distribution a
+					left join device dr on a.customer_id = dr.device_area_id
+					where a.user_id = #{userId}
+					
+					union
+					
+					select a.Customer_id from distribution a
+					where a.user_id = #{userId}
+				)
+			</if>
+		</where>
+		group by d.id
+	</select>
+    <select id="selectDeviceByNoStatus" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+
+		select * from device where status_type != #{status}
+	</select>
+	<select id="findDeviceCustByNamePreject" resultType="org.jeecg.modules.demo.monitor.vo.DeviceVo">
+		SELECT c.id,c.`name`,d.Customer_id
+		from customers c
+		LEFT JOIN device d on d.Customer_id = c.id
+		where c.name = #{name} and c.project_name = #{project} limit 0,1
+	</select>
+	<select id="groupByImei" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+		select Device_imei,max(BackUp3) BackUp3 from  device
+		group by Device_imei
+	</select>
+	<update id="updateHeatTime">
+		update device
+		set Backup3 = now()
+		where Device_imei = #{imei}
+	</update>
+	<update id="updateHeatTimeStatus" parameterType="org.jeecg.modules.demo.monitor.entity.Device">
+		update device
+		set status_type = #{statusType}, backup3 = #{backup3}
+		where id = ${id}
+	</update>
+
+</mapper>

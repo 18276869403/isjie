@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.FloorPlanMapper">
+    <delete id="deletefloordevice">
+		delete from device_floorplan where floorPlan_id = #{id}
+	</delete>
+    <select id="custoMpage"
+		resultType="org.jeecg.modules.demo.monitor.vo.FlorVo">
+		select
+		a1.Area_name as oneAreaName,
+		a2.Area_name as
+		twoAreaName,
+		flor.*,
+		c.name,
+		c.One_area_id,
+		c.Two_area_id
+		from floor_plan flor
+		inner JOIN customers c on
+		c.id=flor.Customer_id
+		-- LEFT JOIN distribution dis on dis.customer_id = c.id
+		inner JOIN area a1 on a1.id = c.One_area_id
+		inner
+		JOIN area a2 on a2.id =
+		c.Two_area_id
+		${ew.customSqlSegment}
+	</select>
+
+	<select id="findFloorPlanById"
+		resultType="org.jeecg.modules.demo.monitor.vo.FloorPlanDTO">
+		select Id id,Floor_name floorName,Plan_pic planPic,backup1 as showIndex from
+		floor_plan 
+		where Customer_id = #{id} 
+		order by backup1
+	</select>
+	<select id="queryFloorPlan"
+		resultType="org.jeecg.modules.demo.monitor.vo.FloorPlanDTO">
+		select Id id,Floor_name floorName,Plan_pic planPic,backup1 as showIndex from
+		floor_plan fp
+		where Customer_id = #{id} 
+		and EXISTS(
+				select 1 from device_floorplan df
+				left join device d on d.id = df.device_id and ifnull(d.del_flag, '0') = '0'
+				left join customers as c on c.id = d.Customer_id 
+				where df.floorPlan_id = fp.Id and d.id is not null
+					and(
+					 ifnull(device_area_id,'0') in(
+	    				select '0'  
+	    				union   
+	    				select dis.customer_id from distribution as dis  
+	    				where dis.user_id = #{userId}
+	    			)   
+	    			 and d.Customer_id in(  
+						select dr.Customer_id from distribution a  
+						left join device dr on a.customer_id = dr.device_area_id  
+						where a.user_id = #{userId}
+						  
+						union  
+						  
+						select a.Customer_id from distribution a  
+						where a.user_id = #{userId}
+					) 
+				)
+		)
+		order by backup1
+	</select>
+	<select id="findFloorPlanById"
+		resultType="org.jeecg.modules.demo.monitor.vo.FloorPlanDTO">
+		select Id id,Floor_name floorName,Plan_pic planPic,backup1 as showIndex from
+		floor_plan 
+		where Customer_id=#{id} 
+		order by backup1
+	</select>
+
+
+	<select id="findDeviceId" resultType="java.lang.Integer">
+		select device_id from
+				device_floorplan  df
+		left join device dr on dr.id = df.device_id
+		where (dr.device_area_id in(
+				select a.Customer_id from distribution as a
+				where a.user_id = #{userId}
+		) or ifnull(dr.device_area_id,'0') = '0')
+		and floorPlan_id=#{fid} and x_axis is not null and x_axis != ''
+		
+	</select>
+
+
+
+	<select id="findFloorPlanByFId"
+		resultType="org.jeecg.modules.demo.monitor.vo.FloorPlanDTO">
+		select Id id,Floor_name floorName,Plan_pic planPic from
+		floor_plan where
+		Id=#{fid}
+	</select>
+
+	<!-- <select id="webselectFlor" resultType="org.jeecg.modules.demo.monitor.vo.FlorVo"> 
+		select plan.Id,plan.Floor_name,plan.Plan_pic,c.id,c.`name` from floor_plan 
+		plan LEFT JOIN customers c on c.id=plan.Customer_id where c.id=#{customerId} 
+		</select> -->
+
+
+	<select id="findFloorByDeviceId" resultType="org.jeecg.modules.demo.monitor.entity.FloorPlan">
+		SELECT f.*
+		 from floor_plan f
+		 INNER JOIN device_floorplan df on f.Id = df.floorPlan_id
+		 where df.device_id = #{deviceId}  and df.customer_id=#{customerId}  and df.x_axis is not null and df.x_axis != '';
+	</select>
+
+</mapper>

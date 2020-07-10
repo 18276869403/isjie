@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="org.jeecg.modules.demo.monitor.mapper.AlarmRecordMapper">
+    <insert id="insertAlarm">
+		INSERT INTO alarm_record  (
+		    alarm_time,
+            alarm_original_record,
+            alarm_iccid,
+            alarm_address,
+            alarm_deviceType,
+            T_status,
+            alarm_pv,
+            alarm_deviceImei,
+            alarm_state,
+            BackUp5,
+            BackUp2,
+            BackUp3
+        )  VALUES  (#{alarmTime},
+                    #{alarmOriginalRecord},
+                    #{alarmICCID},
+                    #{alarmAddress},
+                    #{alarmDeviceType},#{tstatus},#{alarmPv},#{alarmDeviceImei},#{alarmState},
+                    #{backup5},#{backup2},#{backup3})
+	</insert>
+    <delete id="deleteAll">
+        delete from alarm_record
+    </delete>
+
+    <select id="queryAlarmCountByCid"
+            resultType="org.jeecg.modules.demo.monitor.vo.AlarmDiferentVo">
+
+		SELECT
+		count(a.T_status) count,d.Device_type
+		from device d
+		LEFT JOIN customers c on d.Customer_id=c.id
+		LEFT JOIN alarm_record a on d.Device_imei=a.Alarm_deviceImei and
+		d.Address_number=a.Alarm_address  where
+		c.id =#{cid}
+	GROUP BY d.Device_type
+	</select>
+
+    <select id="queryAlarmCountByCidnew" resultType="java.lang.Integer">
+        SELECT count(d.id) count
+        FROM device d
+        WHERE d.id in
+        <foreach item="id" collection="ids" index="index" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+        and d.Device_type=#{type} and d.status_type like #{status}
+    </select>
+    <select id="selectByImeiAndAdd" resultType="org.jeecg.modules.demo.monitor.entity.AlarmRecord">
+        select Alarm_state,T_status from alarm_record
+        where Alarm_deviceImei = #{imei} and Alarm_address = #{add} 
+        	and T_status not like '%通讯%'
+        ORDER BY Alarm_time desc 
+        limit 0,1
+    </select>
+    <select id="selectConnectionError" resultType="java.util.Map">
+        select id from alarm_record
+        where backup2 = #{deviceId} and T_status LIKE '%通讯故障%'  and ifnull(BackUp1,'') = ''
+        limit 0, 1
+    </select>
+    <update id="updateConnectionRecovery">
+        update alarm_record
+        set BackUp1 = '通讯恢复'
+        WHERE backup2 = #{deviceId} and T_status LIKE '%通讯故障%' and ifnull(BackUp1,'') = ''
+    </update>
+</mapper>

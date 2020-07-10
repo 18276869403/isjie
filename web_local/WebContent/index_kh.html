@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>是杰安全云</title>
+		
+		<script src="./js/request.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="./css/common.css">
+		<link rel="stylesheet" href="./css/index.css">
+		<link rel="stylesheet" type="text/css" href="js/skin/jebox.css"/>
+		
+		<!-- <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> -->
+		<script src="js/skin/jebox/jquery.jebox.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/skin/jebox/jquery-1.7.2.js" type="text/javascript" charset="utf-8"></script>
+		
+		
+		<script src="./js/gVerify.js"></script>
+
+	</head>
+
+	<body>
+		<div class="alert alert-success" id="tips" style="display: none;text-align: center;">
+
+		</div>
+		<div class="alert alert-warning" id="tips_fail" style="display: none;text-align: center;">
+
+		</div>
+		<div class="alert alert-info" id="tips_info" style="display: none;text-align: center;">
+
+		</div>
+		<div class="main">
+			<div class="registerframe">
+
+				<div class="logo">
+					<img src="./img/logo.png" alt="">
+				</div>
+				<div id="log">
+					<div class="userName">
+						<input class="userNameIpt" type="text" placeholder="请输入客户名">
+					</div>
+					<div class="passWord">
+						<input class="passWordIpt" type="password" placeholder="请输入密码">
+					</div>
+
+					<div class="code fl">
+						<input class="codeIpt" id="code_input" type="text" placeholder="验证码">
+					</div>
+
+					<div class="codeImg fl" id="codeImg">
+
+					</div>
+					<div style="clear: both;"></div>
+					<div class="register">
+						<button id="register">登录系统</button>
+					</div>
+					<div class="forgetPass">忘记密码</div>
+				</div>
+				<div id="wjpwd" style="display: none;">
+					<div class="userName">
+						<input class="userNameIpt" id="wjname" type="text" placeholder="请输入用户名">
+					</div>
+					<div class="passWord">
+						<input class="passWordIpt" type="password" id="newpwd" placeholder="请输入新密码">
+					</div>
+
+					<div class="code fl">
+						<input class="codeIpt" id="wjcode_input" type="text" placeholder="输入您的验证码">
+					</div>
+
+					<div class="codeImg fl" id="sendcode">
+						发送验证码
+					</div>
+					<div style="clear: both;"></div>
+					<div class="register">
+						<button id="resetpwd">修改</button>
+					</div>
+					<div class="forgetPass1" id="tolog">返回登陆</div>
+				</div>
+
+
+			</div>
+		</div>
+
+		<script>
+			var key = "";
+			var code = ""
+
+			function validateform() {
+				
+				if ($(".userNameIpt").val() == "") {
+					jeBox.msg("请输入用户名", {icon: 3,time:3});
+					return false
+				} else if ($(".passWordIpt").val() == "") {
+					jeBox.msg("请输入密码", {icon: 3,time:3});
+					return false
+				} else if ($("#code_input").val() == "") {
+					jeBox.msg("请输入验证码", {icon: 3,time:3});
+					return false
+				} else {
+					return true
+				}
+
+
+			}
+			$("#codeImg").click(function() {
+				$.ajax({
+					url: requestConf.domain + "sys/getCheckCode",
+					type: "get",
+					success: function(data) {
+						console.log(data)
+						key = data.result.key;
+						code = data.result.code;
+						$("#codeImg").text(data.result.code);
+					}
+				});
+			})
+			$(function() {
+				$.ajax({
+					url: requestConf.domain + "sys/getCheckCode",
+					type: "get",
+					success: function(data) {
+						console.log(data)
+						key = data.result.key;
+						code = data.result.code;
+						$("#codeImg").text(data.result.code);
+					}
+				});
+			})
+			$("#sendcode").click(function() {
+				var req = {
+					username: $("#wjname").val()
+				}
+				$.ajax({
+					url: requestConf.domain + "sys/shortMessage1",
+					type: "POST",
+					dataType: "json", //返回格式为json
+
+					data: req,
+					success: function(data) {
+						if (data.success) {
+							jeBox.msg('发送成功....！', {icon: 2,time:3});
+						}
+
+					}
+				});
+			})
+			$("#resetpwd").click(function() {
+                  if ($("#wjname").val() == "") {
+                  	jeBox.msg("请输入用户名", {icon: 3,time:3});
+                  	return
+                  } 
+                  if ($("#newpwd").val() == "") {
+                  	jeBox.msg("请输入密码", {icon: 3,time:3});
+                  	return
+                  } 
+                  if ($("#wjcode_input").val()=="") {
+                  	jeBox.msg("请输入验证码", {icon: 3,time:3});
+                  	return
+                  } 
+				var req = {
+					sysmodal: $("#wjname").val(),
+					code: $("#wjcode_input").val(),
+					username: $("#wjname").val(),
+					password: $("#newpwd").val()
+				}
+				$.ajax({
+					url: requestConf.domain + "sys/retrievePassword1",
+					type: "POST",
+					contentType: "application/json",
+					// dataType:"json",
+					data: JSON.stringify(req),
+					success: function(data) {
+						if (data.success) {
+							jeBox.msg('重置密码成功....！', {icon: 2,time:3});
+						
+						}
+
+					}
+				});
+			})
+			$("#tolog").click(function() {
+				console.log("a")
+				$("#log").css("display", "block")
+				$("#wjpwd").css("display", "none")
+			})
+			$(".forgetPass").click(function() {
+				console.log("dfsa")
+				$("#log").css("display", "none")
+				$("#wjpwd").css("display", "block")
+			})
+			$("#register").click(function() {
+				console.log(key)
+				if (validateform()) {
+					var req = {
+						username: $(".userNameIpt").val(),
+						password: $(".passWordIpt").val(),
+						captcha: $("#code_input").val(),
+						checkKey: key
+					}
+					$.ajax({
+						url: requestConf.domain + "sys/login1",
+						type: "POST",
+						dataType: "json", //返回格式为json
+						contentType: "application/json",
+						data: JSON.stringify(req),
+						success: function(data) {
+							console.log(data)
+							if (data.success) {
+								jeBox.msg('登录成功....！', {icon: 2,time:3});
+								localStorage.setItem("guster", JSON.stringify(data.result))
+								//多存一个 区分管理员和普通用户
+								localStorage.setItem("isAdmin",0)
+								localStorage.setItem("user", JSON.stringify(data.result))
+								window.location.href = "map.html";
+
+							} else {
+								jeBox.msg(data.message, {icon: 3,time:3});
+								$.ajax({
+									url: requestConf.domain + "sys/getCheckCode",
+									type: "get",
+									success: function(data_c) {
+										
+										key = data_c.result.key;
+										code = data_c.result.code;
+										$("#codeImg").text(data_c.result.code);
+									}
+								});
+								
+							}
+						}
+					});
+				}
+			})
+
+
+
+			//      var verifyCode = new GVerify("codeImg");
+			//      console.log(verifyCode)
+			//      document.getElementById("register").onclick = function () {
+
+			//          console.log(111)
+			//          var res = verifyCode.validate(document.getElementById("code_input").value);
+			//          if (res) {
+			//              alert("验证正确");
+			//          } else {
+			//              alert("验证码错误");
+			//          }
+			//      }
+		</script>
+	</body>
+
+</html>

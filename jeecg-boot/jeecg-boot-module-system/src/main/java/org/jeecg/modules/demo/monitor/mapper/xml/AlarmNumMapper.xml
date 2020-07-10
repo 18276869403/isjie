@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+		namespace="org.jeecg.modules.demo.monitor.mapper.AlarmNumVoMapper">
+
+	<!--用户所有设备7天内报警记录查询-->
+	<select id="selectSevenDayAll" parameterType="org.jeecg.modules.demo.monitor.vo.AlarmServenVO" resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		select b.date as days,
+		case when Alarm_time is null then 0 else count(*) end as count
+		from
+		(select a.alarm_time FROM
+		alarm_record a
+		INNER  JOIN device d on a.backup2 = d.id
+		inner join customers cu  on cu.id = d.Customer_id
+		inner join area a1 on a1.id = cu.One_area_id
+		inner join area a2 on a2.id = cu.Two_area_id
+		<where>
+			<if test="userId!=null">
+				 (
+				 	ifnull(d.device_area_id,'0')  in( 
+						select '0' union
+						select a.customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+					and d.Customer_id in(
+						select dr.Customer_id from distribution a
+						left join device dr on a.customer_id = dr.device_area_id
+						where a.user_id = #{userId}
+						
+						union
+						
+						select a.Customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+				)
+			</if>
+			<if test="oneAreaId!=null">
+				and  cu.One_area_id = #{oneAreaId}
+			</if>
+			<if test="twoAreaId!=null">
+				and cu.Two_area_id = #{twoAreaId}
+			</if>
+			<if test="customerId!=null and customerId!= ''">
+				and cu.id = #{customerId}
+			</if>
+			<if test="alarmDeviceType != null and alarmDeviceType!=''">
+				and d.device_type = #{alarmDeviceType}
+			</if>
+			<if test="deviceNum != null">
+				and d.Device_num like #{deviceNum}
+			</if>
+			<!-- <if test="1 == 1">
+				and a.T_status not in ('解除低警','解除高警','解除故障')
+			</if> -->
+			and a.Alarm_state = '0'
+
+		</where>
+		) bb
+		right  JOIN (
+		SELECT @s :=@s + 1 as `index`,  DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+		FROM mysql.help_topic,(SELECT @s := -1) temp
+		WHERE @s &lt; 6
+		) b on b.date = DATE_FORMAT(bb.Alarm_time, '%Y-%m-%d')
+		GROUP BY b.date;
+	</select>
+	<!-- <select id="selectSevenDayAll" parameterType="org.jeecg.modules.demo.monitor.vo.AlarmServenVO" resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		select b.date as days,
+		case when Alarm_time is null then 0 else count(*) end as count
+		from
+		(select a.alarm_time FROM
+		alarm_record a
+		INNER  JOIN device d on a.Alarm_address = d.Address_number and a.Alarm_deviceImei = d.Device_imei
+		inner join customers cu  on cu.id = d.Customer_id
+		inner join area a1 on a1.id = cu.One_area_id
+		inner join area a2 on a2.id = cu.Two_area_id
+		inner join distribution dis on dis.Customer_id = cu.id
+		<where>
+			<if test="userId!=null">
+				 dis.User_id = #{userId}
+			</if>
+			<if test="oneAreaId!=null">
+				and  cu.One_area_id = #{oneAreaId}
+			</if>
+			<if test="twoAreaId!=null">
+				and cu.Two_area_id = #{twoAreaId}
+			</if>
+			<if test="customerId!=null and customerId!= ''">
+				and cu.id = #{customerId}
+			</if>
+			<if test="alarmDeviceType != null and alarmDeviceType!=''">
+				and d.device_type = #{alarmDeviceType}
+			</if>
+			<if test="deviceNum != null">
+				and d.Device_num like #{deviceNum}
+			</if>
+			<if test="1 == 1">
+				and a.T_status not in ('解除低警','解除高警','解除故障')
+			</if>
+
+		</where>
+		) bb
+		right  JOIN (
+		SELECT @s :=@s + 1 as `index`,  DATE(DATE_SUB(CURRENT_DATE, INTERVAL @s DAY)) AS `date`
+		FROM mysql.help_topic,(SELECT @s := -1) temp
+		WHERE @s &lt; 6
+		) b on b.date = DATE_FORMAT(bb.Alarm_time, '%Y-%m-%d')
+		GROUP BY b.date;
+	</select> -->
+
+	<!-- 客户所有设备报警记录1 -->
+	<select id="selectSevenDayAll1"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		SELECT * from (select a.days,ifnull(b.count,0) as count
+		from (
+		SELECT curdate() as days
+		union all
+		SELECT date_sub(curdate(),
+		interval 1 day) as days
+		union all
+		SELECT date_sub(curdate(), interval 2
+		day) as days
+		union all
+		SELECT date_sub(curdate(), interval 3 day) as
+		days
+		union all
+		SELECT date_sub(curdate(), interval 4 day) as days
+		union
+		all
+		SELECT date_sub(curdate(), interval 5 day) as days
+		union all
+		SELECT
+		date_sub(curdate(), interval 6 day) as days
+		) a left join (
+		select
+		date(Alarm_time) as datetime, count(*) as count
+		from alarm_record t
+		LEFT JOIN device d on d.Device_imei = t.Alarm_deviceImei and
+		d.Address_number=t.Alarm_address
+		where d.Customer_id=#{customerId} and
+		t.Alarm_deviceType=1
+		group by date(Alarm_time)
+		) b on a.days =
+		b.datetime) as t ORDER BY
+		t.days ASC;
+	</select>
+
+	<!-- 客户所有设备报警记录2 -->
+	<select id="selectSevenDayAll2"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		SELECT * from (select a.days,ifnull(b.count,0) as count
+		from (
+		SELECT curdate() as days
+		union all
+		SELECT date_sub(curdate(),
+		interval 1 day) as days
+		union all
+		SELECT date_sub(curdate(), interval 2
+		day) as days
+		union all
+		SELECT date_sub(curdate(), interval 3 day) as
+		days
+		union all
+		SELECT date_sub(curdate(), interval 4 day) as days
+		union
+		all
+		SELECT date_sub(curdate(), interval 5 day) as days
+		union all
+		SELECT
+		date_sub(curdate(), interval 6 day) as days
+		) a left join (
+		select
+		date(Alarm_time) as datetime, count(*) as count
+		from alarm_record t
+		LEFT JOIN device d on d.Device_imei = t.Alarm_deviceImei and
+		d.Address_number=t.Alarm_address
+		where d.Customer_id=#{customerId} and
+		t.Alarm_deviceType=2
+		group by date(Alarm_time)
+		) b on a.days =
+		b.datetime) as t ORDER BY
+		t.days ASC;
+	</select>
+
+	<!-- 客户所有设备报警记录3 -->
+	<select id="selectSevenDayAll3"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		SELECT * from (select a.days,ifnull(b.count,0) as count
+		from (
+		SELECT curdate() as days
+		union all
+		SELECT date_sub(curdate(),
+		interval 1 day) as days
+		union all
+		SELECT date_sub(curdate(), interval 2
+		day) as days
+		union all
+		SELECT date_sub(curdate(), interval 3 day) as
+		days
+		union all
+		SELECT date_sub(curdate(), interval 4 day) as days
+		union
+		all
+		SELECT date_sub(curdate(), interval 5 day) as days
+		union all
+		SELECT
+		date_sub(curdate(), interval 6 day) as days
+		) a left join (
+		select
+		date(Alarm_time) as datetime, count(*) as count
+		from alarm_record t
+		LEFT JOIN device d on d.Device_imei = t.Alarm_deviceImei and
+		d.Address_number=t.Alarm_address
+		where d.Customer_id=#{customerId} and
+		t.Alarm_deviceType=3
+		group by date(Alarm_time)
+		) b on a.days =
+		b.datetime) as t ORDER BY
+		t.days ASC;
+	</select>
+
+	<!-- 单设备七天报警记录 -->
+	<select id="selectSevenDayOne"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		SELECT * from (select a.days,ifnull(b.count,0) as count
+		from (
+		SELECT curdate() as days
+		union all
+		SELECT date_sub(curdate(),
+		interval 1 day) as days
+		union all
+		SELECT date_sub(curdate(), interval 2
+		day) as days
+		union all
+		SELECT date_sub(curdate(), interval 3 day) as
+		days
+		union all
+		SELECT date_sub(curdate(), interval 4 day) as days
+		union
+		all
+		SELECT date_sub(curdate(), interval 5 day) as days
+		union all
+		SELECT
+		date_sub(curdate(), interval 6 day) as days
+		) a left join (
+		select
+		date(Alarm_time) as datetime, count(*) as count
+		from alarm_record t
+		LEFT JOIN device d on d.id = t.backUp2
+		where d.id = #{deviceId}
+		group by date(Alarm_time)
+		) b on a.days
+		= b.datetime) as t ORDER BY t.days ASC;
+	</select>
+
+
+	<!-- 设备报警记录 -->
+	<select id="selectOneDay"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo">
+		select a.days,ifnull(b.count,0) as count
+		from (
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 1
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 2
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 3
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 4
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 5
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 6
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 7
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 8
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 9
+		HOUR),
+		'%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 10
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 11
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 12
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 13
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 14
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 15
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 16
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 17
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 18
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 19
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 20
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 21
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 22
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 23
+		HOUR), '%Y-%m-%d %H' ) as days union all
+		SELECT
+		DATE_FORMAT(date_sub(DATE(curdate()+INTERVAL 1 DAY), interval 24
+		HOUR), '%Y-%m-%d %H' ) as days
+		) a left join (
+		SELECT
+		DATE_FORMAT(
+		a.Alarm_time, '%Y-%m-%d %H' ) as days,
+		COUNT(*)
+		as count
+		FROM alarm_record a
+		where a.backUp2 = #{deviceId} and a.Alarm_state = '0'
+		GROUP BY days
+		) b on a.days = b.days
+		ORDER BY a.days;
+	</select>
+
+	<!-- 客户所有设备报警Top10编号 -->
+	<select id="selectOneDayTop10"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo2">
+		SELECT COUNT(*) count,a.Alarm_deviceImei,a.Alarm_address
+		FROM
+		alarm_record a
+		LEFT JOIN device d
+		on d.Device_imei=a.Alarm_deviceImei AND d.Address_number=a.Alarm_address
+		LEFT JOIN customers c
+		on c.id=d.Customer_id
+		WHERE date(a.Alarm_time)=curdate() AND c.id=#{customerId}
+		GROUP BY a.Alarm_deviceImei,a.Alarm_address
+		ORDER BY
+		count
+		DESC LIMIT 0,10
+	</select>
+	<select id="selectOneTop10" parameterType="org.jeecg.modules.demo.monitor.vo.AlarmServenVO"
+			resultType="org.jeecg.modules.demo.monitor.vo.AlarmNumVo2">
+		SELECT COUNT(*) count,a.Alarm_deviceImei,a.Alarm_address,d.device_type alarmDeviceType,d.Device_Num,d.id as deviceId
+		FROM
+		alarm_record a
+		LEFT JOIN device d on d.id = a.backup2
+		LEFT JOIN customers c on c.id=d.Customer_id
+		inner join area a1 on a1.id = c.One_area_id
+		inner join area a2 on a2.id = c.Two_area_id
+		<where>
+			date(a.Alarm_time)=curdate()
+			<if test="oneAreaId!=null">
+				and  c.One_area_id = #{oneAreaId}
+			</if>
+			<if test="twoAreaId!=null">
+				and c.Two_area_id = #{twoAreaId}
+			</if>
+			<if test="customerId != null">
+				and c.id = #{customerId}
+			</if>
+			<if test="userId!=null and userId!=''">
+				and (
+					ifnull(d.device_area_id,'0')  in( 
+						select '0' union
+						select a.customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+					and d.Customer_id in(
+						select dr.Customer_id from distribution a
+						left join device dr on a.customer_id = dr.device_area_id
+						where a.user_id = #{userId}
+						
+						union
+						
+						select a.Customer_id from distribution a
+						where a.user_id = #{userId}
+					)
+				)
+			</if>
+			<if test="alarmDeviceType!=null and alarmDeviceType!=''">
+				and d.device_type = #{alarmDeviceType}
+			</if>
+			<if test="deviceNum!=null and deviceNum!=''">
+				and d.Device_num like #{deviceNum}
+			</if>
+			<if test="deviceId !=null and deviceId !=''">
+				and d.id = #{deviceId}
+			</if>
+		</where>
+		GROUP BY a.Alarm_deviceImei,a.Alarm_address
+		ORDER BY
+		count
+		DESC LIMIT 0,10
+	</select>
+</mapper>

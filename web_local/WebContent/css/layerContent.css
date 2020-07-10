@@ -1,0 +1,41 @@
+.alaTable{
+	text-align: center;
+	width: 100%;
+}
+.alaTable tr td{
+	padding: 5px;
+	border: 1px solid #ccc;
+}
+.alaTable .a-head td{
+    background: #001b4b;
+	font-weight: bold;
+}
+.alaTable td a{
+	color: #fff;
+	text-decoration: underline;
+	cursor: pointer;
+}
+/* 
+.alaTable td a{
+	width: 100px;
+    display: block;
+    word-spacing: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+} */
+.minLayer{
+	position: fixed;
+	right: 5px;
+	width: 20px;
+	background-color: #fff;
+	opacity: 1;
+	height: 100px;
+	line-height: 100px;
+    bottom: 5px;
+    text-align: center;
+    z-index: 10000;
+}
+a:not([href]):hover {
+    color: #888888 !important;
+}

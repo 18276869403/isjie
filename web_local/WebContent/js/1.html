@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>图片放大缩小</title>
+  <style type="text/css">
+  </style>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+
+<div style="display:flex;flex-direction:row;">
+  <button id="bigger" onclick="blowup()">放大</button>
+  <div id="mqp">
+    <img id="images1" src="http://www.pig66.com/uploadfile/2017/0511/20170511074941292.jpg" alt="" />
+  </div>
+  <button id="smaller" onclick="reduce()">缩小</button>
+  <button id="smaller" onclick="reduce()">缩小</button>
+</div>
+
+
+<script>
+  function blowup() {
+    var images1 = document.getElementById("images1");
+    images1.width = images1.width + 20;
+
+  }
+  function reduce() {
+    var images1 = document.getElementById("images1");
+  }
+</script>
+</body>
+</html>

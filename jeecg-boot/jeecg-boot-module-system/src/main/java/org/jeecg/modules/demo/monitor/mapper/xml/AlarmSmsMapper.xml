@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.AlarmSmsMapper">
+    <insert id="insertSms" parameterType="org.jeecg.modules.demo.monitor.entity.AlarmRecord">
+		insert INTO alarm_sms(iccid,imei,equip_type,equip_add,sms_type,alarm_type,alarm_date,backUP2)
+		VALUES(#{alarmICCID},#{alarmDeviceImei},#{alarmDeviceType},#{alarmAddress},0,#{tstatus},#{alarmTime},#{backup2})
+	</insert>
+    <delete id="deleteAll">
+		delete from alarm_sms
+	</delete>
+    <select id="selectAlarmSms"
+		resultType="org.jeecg.modules.demo.monitor.vo.AlarmSmsVo">
+	 	select
+		a.id,a.alarm_date,a.backUP1,
+		a.alarm_type,a.equip_add,d.Device_type equipType,a.imei,a.send_date,a.sms_type,
+		a1.Area_name oneAreaName,a2.Area_name twoAreaName,
+		c.id,c.`name`,c.Project_name,
+		d.Id,d.Customer_id
+		from alarm_sms a
+		inner JOIN device d on d.Device_imei =a.imei and d.Address_number=a.equip_add
+		inner JOIN customers c on c.id = d.Customer_id
+		inner join customer_accounts c2 on c2.Phone = a.backUP1 and a.backUP1 is not NULL
+		inner JOIN area a1 on a1.id =c.One_area_id
+		inner JOIN area a2 on a2.id = c.Two_area_id
+		${ew.customSqlSegment}
+	</select>
+
+
+	<!--找出未发送的报警信息-->
+	<!-- <select id="findAllAlarm" resultType="org.jeecg.modules.demo.monitor.entity.AlarmSms">
+	SELECT
+			alarm_sms.id,
+			alarm_sms.iccid,
+			alarm_sms.imei,
+			alarm_sms.equip_type,
+			alarm_sms.equip_add,
+			alarm_sms.sms_type,
+			alarm_sms.alarm_type,
+			alarm_sms.alarm_date
+			from alarm_sms
+			where sms_type = '0' and (backUP1 is null or backUP1 = '')
+	</select> -->
+	<select id="findAllAlarm" resultType="org.jeecg.modules.demo.monitor.entity.AlarmSms">
+		SELECT
+			a.id,
+			a.iccid,
+			a.imei,
+			a.equip_type,
+			a.equip_add,
+			a.sms_type,
+			a.alarm_type,
+			a.alarm_date,
+			d.id deviceId,
+			d.Customer_id as customerId
+		from alarm_sms as a
+		left join device as d
+				on a.backUP2 = d.id
+		left join customers as c
+				on c.id = d.Customer_id
+		where d.id is not null 
+				and c.id is not null 
+				and sms_type = '0' 
+				and (a.backUP1 is null or a.backUP1 = '')
+				and a.alarm_type not like '%维护%'
+	</select>
+	<!--找出报警设备-->
+	<select id="findDevice" resultType="org.jeecg.modules.demo.monitor.entity.Device">
+		SELECT
+			device.Id,
+			device.Customer_id,
+			device.device_num
+			from device
+			where (Device_imei=#{imei} and Address_number=#{addnum} and Device_type = #{deviceType})
+		limit 1
+	</select>
+	<!--短信发送完毕，修改数据信息-->
+	<update id="updateStatus">
+		update alarm_sms set sms_type = '1',send_date=#{nowDate} where id = #{aid}
+	</update>
+
+
+
+</mapper>

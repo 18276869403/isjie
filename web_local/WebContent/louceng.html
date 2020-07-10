@@ -1,0 +1,1291 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>是杰安全云</title>
+	<link rel="stylesheet" href="./css/data.css">
+	<link rel="stylesheet" href="./css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="js/skin/jebox.css" />
+		
+	<script src="./js/request.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/quanxianrenzheng.js"></script>
+	<script src="js/jquery-3.4.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/louceng.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/skin/jebox/jquery-1.7.2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./js/jquery.liMarquee.js"></script>
+	<script type="text/javascript" src="./qlib/szqbl.juicer.min.js"></script>
+	<script src="./layui/layui.js"></script>
+	<script src="./js/quanxianrenzheng.js"></script>
+	<script src="js/skin/jebox/jquery.jebox.js" type="text/javascript" charset="utf-8"></script>
+	<!--	<script src="js/skin/jeplanPic/jquery.jeplanPic.js" type="text/javascript" charset="utf-8"></script>-->
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		.sbinlouceng {
+			width: 80px;
+			background-color: #000000;
+			color: #E9ECEF;
+			text-align: center;
+			border-radius: 10px;
+			height: 30px;
+			line-height: 30px;
+			position: absolute;
+		}
+		.sbinloucengimg {
+			width: 40px;
+			height: 40px;
+			position: absolute;
+		}
+		.tipssanjiao {
+			position: absolute;
+			width: 32px;
+			height: 32px;
+		}
+		.angle {
+			display: inline-block;
+			width: 0px;
+			height: 0px;
+			position: absolute;
+			bottom: -60px;
+			border: 14px solid;
+			left: 15px;
+			bottom: -25px;
+			opacity: 0.8;
+			border-color: #333333 transparent transparent transparent;
+		}
+		/*背景层*/
+		#popLayer {
+			display: none;
+			/*background-color: #B3B3B3;*/
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			z-index: 10;
+			-moz-opacity: 0.8;
+			opacity:.80;
+			filter: alpha(opacity=80);/* 只支持IE6、7、8、9 */
+		}
+
+		/*弹出层*/
+		#popBox {
+			display: none;
+			background-color: #FFFFFF;
+			z-index: 11;
+			width: 180px;
+			height: 130px;
+			position:fixed;
+			top:0;
+			right:0;
+			left:0;
+			bottom:0;
+			margin:auto;
+			border-radius: 5px;
+		}
+
+		.yuan {
+
+			width: 8px;
+			height: 8px;
+			border-radius: 8px;
+			float: left;
+			margin-top: 6px;
+			margin-left: 3px;
+			margin-right: 6px;
+		}
+
+		.circle1 {
+			background-color: #E96629;
+		}
+
+		.circle2 {
+			background-color: #41C8A6;
+		}
+
+		.circle3 {
+			background-color: #F9D345;
+		}
+
+		.circle4 {
+			background-color: #993FB8;
+		}
+
+		.circle5 {
+			background-color: #E41D15;
+		}
+		#user_xiala {
+			width: 150px;
+			height: 100px;
+			position: absolute;
+			top: 60px;
+			right: 20px;
+			background-color: #f7f7f7;
+			z-index: 1000;
+			display: none;
+		}
+		#xiala1 {
+			height: 50%;
+		}
+		#xiala1:hover {
+			background-color: #eaeaea;
+			cursor: pointer;
+		}
+		#xiala2 {
+			border-top: 1px solid #dfdfdf;
+			height: 50%;
+		}
+		#xiala2:hover {
+			background-color: #eaeaea;
+			cursor: pointer;
+		}
+		.xiala_span {
+			color: black;
+			margin-left: 45px;
+		}
+		.content {
+			margin-top: 25px;
+		}
+
+		#tanchuang::-webkit-scrollbar {
+			display: none;/*隐藏滚动条*/
+		}
+		.page-tools-div{
+		    position: absolute;
+		    right: 30px;
+		    top: 30px;
+		    background: #bcbcbc;
+		    opacity: 0.8;
+		    padding-bottom: 10px;
+		}
+		.page-tools-div .text{
+		    padding: 10px 0px;
+		    width:65px;
+		    text-align: center;
+		    color:  #ff1a15;
+		}
+	</style>
+	<link rel="stylesheet" type="text/css" href="css/layerContent.css" />
+	<!-- <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=PnOLHS34HgAmAEyKylVyecVz0Q2lnZmZ"></script> -->
+
+</head>
+
+<body style="overflow-y: hidden">
+
+<div id="head"
+	 style="display: block;position: relative;height: 60px;width: 100%;position:fixed;background-color: #000000;z-index: 999;border-bottom: 1px solid #4d5b65;">
+	<img src="img/logo.jpg" style="margin-top: 10px;margin-left: 20px;float: left;width:40px;height:40px;"
+		 id="logo">
+	<div id="logoText" style="float: left;font-size: 16px;color: #FFFFFF;line-height: 60px;margin-left: 10px;">
+		是杰安全云
+	</div>
+
+	<div id="all"
+		 style="float: left;color: #FFFFFF;font-size: 16px;line-height:60px;width: 24%;text-align: center;margin-left: 27%;">
+		<div onclick="heade()" id="sy" style="width: 33.33%;float: left;background-color: #1d4555;">
+			首页
+		</div>
+		<div onclick="jilu()" id="ssjl" style="width: 33.33%;float: left;">
+			实时列表
+		</div>
+		<div onclick="alarm()" id="bjjl" style="width: 33.33%;float: left;">
+			历史记录
+		</div>
+	</div>
+
+	<div id="user_l" style="float: right;color: #FFFFFF;line-height: 60px;font-size: 15px;margin-right: 20px;">
+		<img onclick="logout()" src="img/shezhi@1x.png" style="margin-top: 16px;margin-left: 8px;float: right;">
+		<!--下拉(修改密码/退出登录)-->
+		<div id="user_xiala">
+			<div id="xiala1" onclick="logout2()"><span class="xiala_span">修改密码</span></div>
+			<div id="xiala2" onclick="logout1()"><span class="xiala_span">退出登录</span></div>
+		</div>
+		<span id="">
+				当前登陆用户:<span style="margin: 0px 10px;" id="name_l">
+				</span>
+			</span>
+	</div>
+</div>
+<div id="popLayer"></div>
+<div id="popBox">
+	<div class="close">
+		<button Onclick="closeBox()" class="closebtn">关闭</button>
+	</div>
+	<p class="con">当前设备未布置</p>
+</div>
+<!-- wk  -->
+<div id="fullScreen"
+	 style="
+	 /* 
+	 height: 1000px;
+	 background-image: url(img/beijing@1x.png); */
+	 width: 100%;
+	 /*  */
+	 height:calc(100vh);
+	 position: relative;
+	 overflow-y: hidden;">
+	<div id="left_content"
+		 style="float: left;width: 16%;height: 860px;display: block;z-index:999;position: absolute;top:59px;background-image: url(img/beijing@1x.png);">
+		<table border="1px" cellspacing="0" cellpadding="10"
+			   style="border-color: #007BFF;border-width: 1px;width: 90%;margin: 0 auto;margin-top: 20px;color: #FFFFFF;text-align: center;">
+			<tr>
+				<th style="font-weight: 100;">序号</th>
+				<th style="font-weight: 100;">楼层名称</th>
+				<!--					<th></th>-->
+			</tr>
+			<tbody id="loucengall">
+			</tbody>
+		</table>
+		<div id="" style="color: #FFFFFF; margin-top: 10px;
+		    float: left;
+		    width: 100%;">
+			<div id="" style=" text-align: center;">
+					<span id="" onclick="actions.pageup()" style="cursor: pointer;">
+						上一页
+					</span>
+				<span id="currentpage">
+						1
+					</span>
+				<span id="">/</span>
+				<span id="pageall">
+						1
+					</span>
+				<span id="" onclick="actions.pagedown()" style="cursor: pointer;">
+						下一页
+					</span>
+			</div>
+		</div>
+		<div id="" style="margin-top: 40px;font-size: 13px;">
+			<div id=""
+				 style="text-align: center;color: #6de7ff;height: 40px;line-height: 40px;border-bottom: 1px solid #343a62;font-size: 16px;">
+				本企业设备情况
+			</div>
+			<div id="" style="">
+				<div id=""
+					 style="width: 90%;margin: 0 auto;margin-top: 20px;text-align: center;font-weight: 700;color: #b7b9c3;">
+					<div id=""
+						 style="float: left;width: 30%;height: 40px;margin-left: 2%;line-height: 40px;background-color: white">
+						<div id="allcount" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							设备总数
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #01FF02;height: 40px;margin-left: 2%;line-height: 40px;">
+						<div id="normalcount" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							正常设备
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #F30330;height: 40px;margin-left: 2%;line-height: 40px;">
+						<div id="bjsb" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							报警设备
+						</div>
+					</div>
+				</div>
+				<div id="" style="clear: both;"></div>
+				<div id=""
+					 style="width: 90%;margin: 0 auto;margin-top: 40px;text-align: center;font-weight: 700;color: #b7b9c3;">
+					<div id=""
+						 style="float: left;width: 30%;background-color: #1690f1;height: 40px;margin-left: 2%;line-height: 40px;">
+						<div id="whsb" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							维护设备
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #fFE31E;height: 40px;margin-left: 2%;line-height: 40px;">
+						<div id="gzsb" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							设备故障
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #b2b6bc;height: 40px;margin-left: 2%;line-height: 40px;">
+						<div id="txgz" style="color: black;font-size: 20px;">
+							0
+						</div>
+						<div id="" style="margin-top: -5px">
+							通讯故障
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div id="" style="margin-top: 80px;font-size: 13px;">
+			<div id=""
+				 style="text-align: center;color: #6de7ff;height: 40px;line-height: 40px;border-bottom: 1px solid #343a62;font-size: 16px;">
+				本层总设备情况
+			</div>
+			<div id="" style="">
+				<div id=""
+					 style="width: 90%;margin: 0 auto;margin-top: 20px;text-align: center;font-weight: 700;color: #b7b9c3;">
+					<div id=""
+						 style="float: left;width: 30%;background-color: white;height: 40px;margin-left: 2%;line-height: 40px;">
+							<span id="self_all" style="color:black;font-size: 20px;">
+								0
+							</span>
+
+						<div id="" style="margin-top: -5px">
+							设备总数
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color:  #01FF02;height: 40px;margin-left: 2%;line-height: 40px;">
+							<span id="self_normal" style="color: black;font-size: 20px;">
+								0
+							</span>
+						<div id="" style="margin-top: -5px">
+							正常设备
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #F30330;height: 40px;margin-left: 2%;line-height: 40px;">
+							<span id="self_bjsb" style="color: black;font-size: 20px;">
+								0
+							</span>
+						<div id="" style="margin-top: -5px">
+							报警设备
+						</div>
+					</div>
+				</div>
+				<div id="" style="clear: both;"></div>
+				<div id=""
+					 style="width: 90%;margin: 0 auto;margin-top: 40px;text-align: center;font-weight: 700;color: #b7b9c3;">
+					<div id=""
+						 style="float: left;width: 30%;background-color: #1690f1;height: 40px;margin-left: 2%;line-height: 40px;">
+							<span id="self_whsb" style="color: black;font-size: 20px;">
+								0
+							</span>
+						<div id="" style="margin-top: -5px">
+							维护设备
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color:#fFE31E;height: 40px;margin-left: 2%;line-height: 40px;">
+							<span id="self_gzsb" style="color: black;font-size: 20px;">
+								0
+							</span>
+						<div id="" style="margin-top: -5px">
+							设备故障
+						</div>
+					</div>
+					<div id=""
+						 style="float: left;width: 30%;background-color: #b2b6bc;height: 40px;margin-left: 2%;line-height: 40px;" >
+							<span id="self_txgz" style="color: black;font-size: 20px;">
+								0
+							</span>
+						<div id="" style="margin-top: -5px">
+							通讯故障
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<img src="" id="hideImg" style="display :none;width:100%">
+
+	<div id="planPic"
+		 style="transform:scale(1);margin-top: 60px;
+		 		border-top:60px;position: relative;overflow: hidden;
+		 		float: right;
+		 		/* background-size: 1920px 969px; */
+		 		width: 84%; 
+		 		height:calc(100vh - 60px);
+		 		/*width:1051px;
+		 		height:800px;*/
+		 		background-repeat:no-repeat;z-index:100">
+		<!-- 箭头移动图片 -->
+		<!--		<img src="img/moveup.png" style="position: absolute;width: 40px;height: 100px;right: 30px;top:40%" onclick="imgmove(1)">-->
+		<!--		<img src="img/movedown.png" style="position: absolute;width: 40px;height: 100px;right: 30px;top:55%" onclick="imgmove(2)">-->
+		<!--		<img src="img/moveleft.png" style="position: absolute;width: 100px;height: 40px;bottom: 50px;left: 40%" onclick="imgmove(3)">-->
+		<!--		<img src="img/moveright.png" style="position: absolute;width: 100px;height: 40px;bottom: 50px;left: 55%" onclick="imgmove(4)">-->
+		<div id="hidden_left" onclick="hidden_left()"
+			 style="float: left;margin-left:0px;margin-top: 400px;height: 100px;display: block;line-height: 100px;background-color: #007BFF;">
+			<img id="img2" style="height: 30px;width: 30px;z-index: 999;" src="img/point_left.png" id="hidden_img">
+		</div>
+		<img id="timg"
+			 src="img/jiazaizhong.png"
+
+			 style="z-index:-1000; width: 100%; position: absolute;transform:scale(1); background-repeat: no-repeat; background-size: cover; left: 0;  height: 99.9%; top:0px;" >
+		<div id="dev_popuo"
+			 style="z-index: 1000;display: none;position: absolute;background-color: #696d78;color: #e4e5e7;border-radius: 10px;padding: 10px;opacity:1 !important;">
+
+			<div id="" style="margin: 10px 0px;">
+				<div id="" class="yuan circle1"></div>设备编号&nbsp;:&nbsp;<span id="deviceImei"></span>
+			</div>
+			<div id="" style="margin: 10px 0px;clear: both;">
+				<div id="" class="yuan circle2"></div>
+				设备位置&nbsp;:&nbsp;<span id="deviceType" style="color: #06dae1;"></span>
+			</div>
+			<div class="testPvDiv">
+				<div id="" class="yuan circle3"></div>
+				<label>检测目标&nbsp;:&nbsp;<span id="ranges" style="color: #06dae1;"></span>
+				</label>
+			</div>
+			<div id="" style=" ">
+				<div id="" class="yuan circle4"></div>
+				<label>状态&nbsp;:&nbsp;<span id="statusType" style="color: #2fc794;"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			</div>
+			<div class="testPvDiv">
+				<div  class="yuan circle5"></div>
+				<label>检测值&nbsp;:&nbsp;<span id="testPv" style="color: #06dae1;"></span>
+										<!--<span id="unit1" style="color: #06dae1;"></span>-->
+				</label>
+			</div>
+			<div class="outPvDiv" style="height: 60px">
+				<div  class="yuan circle5"></div>
+				<label>输出&nbsp;:&nbsp;<span id="outPv" style="color: #06dae1;"></span>
+				</label>
+			</div>
+			<img id ="sanjiaoshangimg" src="img/sanjiaoshang.png" style="position: absolute;bottom:190px;left: 80px;height:18px">
+			<img id ="sanjiaoleftimg" src="img/sanjiaoleft.png" style="position: absolute;top:30px;left: -13px;height:18px">
+			<img id ="sanjiaorightimg" src="img/sanjiaoright.png" style="position: absolute;top:70px;right: -13px;height:18px">
+			<img id ="sanjiaoimg" src="img/sanjiao.png" style="position: absolute;bottom:-13px;left: 80px;height:18px">
+		</div>
+
+		<div id="louceng_dev" style="position: absolute;left: 30px;">
+			<!-- <img src="img/Kshebeiguzhang@1X.png" > -->
+		</div>
+		<div class="page-tools-div">
+			<div id="" class="text" onclick="allscreen()" >
+				<img src="img/quanpin@1x.png" style="height: 20px;width: 20px;">
+				<div id="state" >
+					全屏
+				</div>
+			</div>
+			<!-- <div id="" onclick="bigger()" class="text">
+				<img src="img/fangda@1x.png" style="height: 30px;width: 30px;">
+				<div id="" >
+					放大
+				</div>
+			</div>
+			<div id="" onclick="smaller()" class="text">
+				<img src="img/suoxiao@1x.png" style="height: 23px;width: 23px;">
+				<div id=""  >
+					缩小
+				</div>
+			</div> -->
+			<div id="" onclick="huanyuan()" class="text">
+				<img src="img/huanyuan@1x.png" style="height: 23px;width: 23px;">
+				<div id=""  >
+					还原
+				</div>
+			</div>
+			<div id="nextPage" class="text" style="display: none" onclick="nextPage()">
+				<img src="img/next.png" style="height: 23px;width: 23px;">
+				<div id="" >
+					<span>后一页</span>
+				</div>
+			</div>
+			<div id="prevPage" class="text" style="display: none" onclick="prevPage()">
+				<img src="img/prev.png" style="height: 23px;width: 23px;">
+				<div id=""  >
+					<span>前一页</span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+	<audio id="voice" preload loop>
+	    <source src="./audio/alarm.mp3" type="audio/mp3"></source>
+	  		当前浏览器不支持播放声音
+	</audio>
+	 <audio id="breakdownVoice" preload loop>
+	     <source src="./audio/breakdown.mp3" type="audio/mp3"></source>
+	   		当前浏览器不支持播放声音
+	 </audio>
+<script type="text/javascript">
+
+    var imgbeginHeight = parseFloat($("#timg").css("height").replace("px", ""));
+    var imgbeginWidth  = parseFloat($("#timg").css("width").replace("px", ""));
+
+    var height = 969;
+    var width = 83;
+    var user = JSON.parse(localStorage.getItem("user"));
+    var isAdmin = localStorage.getItem("isAdmin");
+    var guster = null;
+    if (isAdmin == 1){
+		// $("#name_l").text(user.userInfo.realname);
+		$("#name_l").text(user.customerName)
+		if(user.logo && !requestConf.forceLogo){
+			$("#logo").attr("src", requestConf.domain + "sys/common/view/" + user.logo)
+			$("#logoText").html(user.webName)
+		} else {
+			$("#logo").attr("src", requestConf.logoImg);
+			$("#logoText").html(requestConf.logoText);
+		}
+	}
+
+    else {
+        guster = JSON.parse(localStorage.getItem("guster"));
+        $("#name_l").html(user.customerName)
+        $("#logo").attr("src", requestConf.domain + "sys/common/view/" + user.customerLogo)
+        $("#logoText").html(user.webName)
+        $("#sfmr").text(user.oneAreaName)
+        $("#mrcity").text(user.twoAreaName)
+        $("#gsname").text(user.customerName)
+    }
+
+    function smaller() {
+        var oldHeight = parseFloat($("#timg").css("height").replace("px", ""));
+        var oldWidth = parseFloat($("#timg").css("width").replace("px", ""));
+        //	$("#louceng_dev").find("img").css("top", "0px");
+        var newHeight = oldHeight*0.98;
+        var newWidth = oldWidth*0.98;
+        $("#timg").css("height", newHeight + "px");
+        $("#timg").css("width", newWidth + "px");
+        refushLocation(oldHeight);
+        /*var wScale = newWidth / oldWidth;
+        var hScale = newHeight / oldHeight;
+        var loucengImg = $(".sbinloucengimg");
+        var louceng = $(".sbinlouceng");
+        var tips = $(".tipssanjiao");
+        var left = 11;
+        var top = 12;
+        var lestp = 32;
+		var topp = 110;
+		let maps = []
+		$.each(loucengImg, function (index, item) {
+             left = parseFloat($(item).css("left").replace("px", ""));
+             top = parseFloat($(item).css("top").replace("px", ""));
+            $(item).css({ "left": (left+lestp)*wScale -lestp  + "px", "top": (top+topp)*hScale-topp + "px" })
+			maps.push((top+topp)*hScale-topp);
+        })
+        // console.log(left,top)
+		$.each(louceng, function (index, item) {
+			$(item).css({ "left": item.offsetLeft*wScale+ "px", "top": maps[index]-39+ "px" })
+		})
+		$.each(tips, function (index, item) {
+			//$(item).css({ "left": item.offsetLeft*wScale + "px", "top": item.offsetTop*hScale + "px" })
+			$(item).css({ "left": item.offsetLeft*wScale + "px", "top": maps[index]-20+ "px" })
+		})*/
+
+    }
+
+    function bigger() {
+        //先获取以前的height
+        var oldHeight = parseFloat($("#timg").css("height").replace("px", ""));
+        var oldWidth = parseFloat($("#timg").css("width").replace("px", ""));
+        /* console.log("框体大小")
+        console.log($("#planPic").css("height").replace("px", ""),$("#planPic").css("width").replace("px", "")) */
+        var newHeight = oldHeight*1.02;
+        var newWidth = oldWidth*1.02;
+        $("#timg").css("height", newHeight + "px");
+        $("#timg").css("width", newWidth + "px");
+        refushLocation(oldHeight);
+        /*var wScale = newWidth / oldWidth;
+        var hScale = newHeight / oldHeight;
+        var loucengImg = $(".sbinloucengimg");
+        var louceng = $(".sbinlouceng");
+        var tips = $(".tipssanjiao");
+        var left = 0;
+        var top = 0;
+        var lestp = -26;
+        var topp = 100;
+        var dituLeft = document.getElementById('timg').offsetLeft;
+        var dituTop = document.getElementById('timg').offsetTop;
+        let maps = []
+        $.each(loucengImg, function (index, item) {
+            console.log(parseFloat($(item).css("left").replace("px", "")),parseFloat($(item).css("top").replace("px", "")));
+            left = parseFloat($(item).css("left").replace("px", ""));
+            top = parseFloat($(item).css("top").replace("px", ""));
+            // console.log(left,top);
+            $(item).css({ 
+            	"left": (left+lestp)*wScale-lestp + "px", 
+            	"top": (top+topp)*hScale-topp + "px" 
+            	//"left": (left) * wScale + "px", 
+            	//"top": (top) * hScale + "px" 
+            })
+			maps.push((top+topp)*hScale-topp);
+        })
+		// console.log("maps",maps);maps
+		$.each(louceng, function (index, item) {
+			$(item).css({ "left": item.offsetLeft*wScale+ "px", "top": maps[index]-39+ "px" })
+		})
+		$.each(tips, function (index, item) {
+			//$(item).css({ "left": item.offsetLeft*wScale + "px", "top": item.offsetTop*hScale + "px" })
+			$(item).css({ "left": item.offsetLeft*wScale + "px", "top": maps[index]-20+ "px" })
+		})*/
+    }
+
+    function huanyuan() {
+    	resetImgSize();
+        refushLocation();
+        /*var wScale = newWidth / oldWidth;
+        var hScale = newHeight / oldHeight;
+        console.log(wScale,hScale)
+        var loucengImg = $(".sbinloucengimg");
+        var louceng = $(".sbinlouceng");
+        var tips = $(".tipssanjiao");
+		let left = 0;
+		let top = 0;
+		var lestp = 50;
+		var topp = 100;
+		$.each(loucengImg, function (index, item) {
+			left = parseFloat($(item).css("left").replace("px", ""));
+			top = parseFloat($(item).css("top").replace("px", ""))
+			$(item).css({ "left": (left+lestp) * wScale-lestp + "px", "top": (top+topp) * hScale-topp + "px" })
+		})
+		$.each(louceng, function (index, item) {
+			//$(item).css({ "left": left*wScale+ "px", "top": top*hScale-42 + "px" })
+			$(item).css({ "left": item.offsetLeft*wScale+ "px", "top": item.offsetTop*hScale + "px" })
+		})
+		$.each(tips, function (index, item) {
+			// $(item).css({ "left": left*wScale + "px", "top": top*hScale-25 + "px" })
+			$(item).css({ "left": item.offsetLeft*wScale + "px", "top": item.offsetTop*hScale + "px" })
+		})*/
+    }
+    var hei = window.innerHeight;
+    var state = false;
+    function allscreen() {
+        state = !state
+        // alert(window.screen.availHeight)
+        if (state) { 
+        	fullScrollOpen();
+            
+            $("#left_content").hide().css({width : "0%"});
+            $("#planPic").css({
+            	"width": "100%", 
+            	"height" : "calc(100vh)", 
+            	"margin-top" : "0px"});
+            $('#head').css({"visibility" : "hidden", "height" : "0px"});
+            $("#timg").css("width", "100%");
+            $("#hidden_left").hide();
+
+            $('#state').html('退出');
+            firstLoad = true;
+    	    setImgInitScale();
+            refushLocation();
+        } else {
+        	fullScrollClose();
+            $("#left_content").css("width", "16%").show();
+            $("#hidden_left").show();
+            $('#head').css({"visibility" : "visible", "height" : "60px"});
+            $("#planPic").css({
+            	"width": "83%",
+            	"margin-top" : "60px",
+            	"height" : "calc(100vh - 60px)"
+            }); 
+            $('#state').html('全屏');
+            setTimeout((r) => {
+                huanyuan();
+			}, 300);
+        }
+    }
+
+    function jilu() {
+        document.getElementById("ssjl").style.backgroundColor = "#1d4555"
+        document.getElementById("sy").style.backgroundColor = ""
+        document.getElementById("bjjl").style.backgroundColor = ""
+        localStorage.removeItem("deviceType")
+        localStorage.removeItem("sbdz")
+        localStorage.removeItem("testDeviceImei")
+        localStorage.removeItem("addressobj")
+        window.location.href = "data-floor.html"
+    }
+
+    function heade() {
+        document.getElementById("bjjl").style.backgroundColor = ""
+        document.getElementById("ssjl").style.backgroundColor = ""
+        document.getElementById("sy").style.backgroundColor = "#1d4555"
+        window.location.href = "louceng.html"
+    }
+
+    function alarm() {
+        document.getElementById("sy").style.backgroundColor = ""
+        document.getElementById("ssjl").style.backgroundColor = ""
+        document.getElementById("bjjl").style.backgroundColor = "#1d4555"
+        window.location.href = "call.html"
+    }
+
+    function tosingle(a) {
+    	var obj = JSON.parse($(a).attr('attr'));
+        localStorage.setItem("deviceType", obj.deviceType)
+        localStorage.setItem("sbdz", obj.addressNumber)
+        localStorage.setItem("testDeviceImei", obj.deviceImei)
+        localStorage.setItem("iccid", obj.iccid)
+        window.location.href = "data-floor.html?deviceId=" + obj.id
+        		+ "&deviceType=" + obj.deviceType
+        		+ "&sbdz=" + obj.addressNumber
+        		+ "&testDeviceImei=" + obj.deviceImei
+        		+ "&iccid=" + obj.iccid
+        		;
+    }
+
+    var preLeftContent = "";
+    function hidden_left() {
+        state = !state
+        if (state) {
+            preLeftContent = $("#left_content").css("width");
+            $("#left_content").css("width", "0%")
+            $("#left_content").css("display", "none")
+            $("#planPic").css("width", "100%")
+            // $("#hidden_img").src("img/point.png")
+            var img = document.getElementById("hidden_img");
+            if(img){
+            	img.src = "img/point.png";
+            } 
+        } else {
+            $("#left_content").css("width", preLeftContent)
+            $("#left_content").css("display", "block")
+            $("#planPic").css("width", "83%");
+            var img = document.getElementById("hidden_img");
+            if(img){
+            	img.src = "img/point.png";
+            } 
+        }
+    }
+    //设置显示下拉
+    function logout() {
+        var user_xiala = document.getElementById("user_xiala");
+        if (user_xiala.style.display == "block") {
+            user_xiala.style.display = "none";
+        } else {
+            user_xiala.style.display = "block";
+        }
+
+    }
+    /*点击关闭按钮*/
+    function closeBox() {
+        var popBox = document.getElementById("popBox");
+        var popLayer = document.getElementById("popLayer");
+        popBox.style.display = "none";
+        popLayer.style.display = "none";
+    }
+    function logout2() {
+        var user_xiala = document.getElementById("user_xiala");
+        user_xiala.style.display = "none";
+        jeBox({
+            cell: "jbx",
+            title: "修改密码",
+            boxSize: ["400px", "300px"],
+            content: '<div style="margin: 40px 68px;width: 300px;height: 125px" >' +
+            '<div class="content">旧密码：&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" name="oldpwd" id="oldpwd" /></div>' +
+            '<div class="content">新密码：&nbsp;&nbsp;&nbsp;&nbsp;<input type="password" name="newpwd" id="newpwd" /></div>' +
+            '<div class="content">确认密码：<input type="password" name="quenewpwd" id="quenewpwd" onblur="checkpwd()"/><span id="tishi"></span></div>' +
+            '</div>',
+            maskLock: true,
+            btnAlign: "right",
+            button: [{
+                name: '确定',
+                callback: function (index) {
+                    var password = document.getElementById("newpwd").value;
+                    var repassword = document.getElementById("quenewpwd").value;
+                    var url = requestConf.domain + "sys/reversUserPassword";
+                    var isAdmin = localStorage.getItem("isAdmin");
+                    var req = {
+                        id: user.userId,
+                        oldPassword: $("#oldpwd").val(),
+                        newPassword: $("#newpwd").val(),
+                    };
+
+                    if (isAdmin == 0) {//客户
+                        req.id = user.customerId;
+                        url = requestConf.domain + "sys/reversCustomerPassword";
+                    }
+                    if (password == repassword){
+                        $.ajax({
+                            url: url,
+                            type: "post",
+                            contentType: "application/json",
+                            //dataType: "json",
+                            data: JSON.stringify(req),
+                            beforeSend: function (request) {
+                                request.setRequestHeader("X-Access-Token",
+                                    user.token
+                                );
+                            },
+                            success: function(data) {
+                                if (data.success) {
+                                    jeBox.msg("修改密码成功....！", {icon: 2,time:3});
+
+                                    localStorage.clear()
+                                    if (isAdmin == 1)
+                                        setTimeout(function() {
+                                            window.location.href = "index.html";
+                                        }, 1000);
+                                    else
+                                        setTimeout(function() {
+                                            window.location.href = "index_kh.html"
+                                        }, 1000);
+
+                                }else{
+                                    jeBox.msg("旧密码错误....！", {icon: 3,time:3});
+                                }
+                            },
+                            error: function () {
+                                console.log("请求失败");
+                            }
+                        });
+                    }
+                }
+            },
+                {
+                    name: '取消'
+                }
+            ]
+        })
+    }
+    //验证密码是否一致
+    function checkpwd() {
+        var password = document.getElementById("newpwd").value;
+        var repassword = document.getElementById("quenewpwd").value;
+        if (password == repassword){
+            document.getElementById("submit").disabled = false;
+        }else{
+            document.getElementById("tishi").innerHTML="<br><font color='red'>两次输入密码不一致!</font>";
+            document.getElementById("submit").disabled = true;
+
+        }
+    }
+    //退出
+    function logout1() {
+        var user_xiala = document.getElementById("user_xiala");
+        user_xiala.style.display = "none";
+        jeBox({
+            cell: "jbx",
+            title: "退出",
+            boxSize: ["300px", "150px"],
+            content: '<div style="font-size:18px;padding: 15px 10px;">确定要退出系统么？</div>',
+            maskLock: true,
+            btnAlign: "right",
+            button: [{
+                name: '确定',
+                callback: function (index) {
+                    var url = requestConf.domain + "sys/logout";
+                    var isAdmin = localStorage.getItem("isAdmin");
+                    var req = {
+                        uid: user.userId
+                    }
+                    if (isAdmin == 0) {
+                        req.uid = user.customerId;
+                        url = requestConf.domain + "sys/logout1";
+                    }
+                    $.ajax({
+
+                        url: url,
+                        type: "get",
+                        // contentType: "application/json",
+                        dataType: "json",
+                        data: req,
+                        beforeSend: function (request) {
+                            request.setRequestHeader("X-Access-Token",
+                                user.token
+                            );
+
+                        },
+                        success: function (data) {
+                            if (data.success) {
+                                localStorage.clear()
+                                if (isAdmin == 1)
+                                    window.location.href = "index.html"
+                                else
+                                    window.location.href = "index_kh.html"
+                            }
+                        },
+                        error: function () {
+                            console.log("请求失败");
+                        }
+                    });
+                }
+            },
+                {
+                    name: '取消'
+                }
+            ]
+        })
+
+
+    }
+
+    let step = 0.05;
+    let INNER = false;
+
+    // 鼠标相对页面的位置
+    function getMousePos(event) {
+        let e = event || window.event;
+        let scrollX =
+            document.documentElement.scrollLeft || document.body.scrollLeft;
+        let scrollY =
+            document.documentElement.scrollTop || document.body.scrollTop;
+        let x = e.pageX || e.clientX + scrollX;
+        let y = e.pageY || e.clientY + scrollY;
+        //alert('x: ' + x + '\ny: ' + y);
+        return { x: x, y: y };
+    }
+    function getElementPosition(select) {
+        let dom = document.querySelector(select);
+        let scrollX =
+            document.documentElement.scrollLeft || document.body.scrollLeft;
+        let scrollY =
+            document.documentElement.scrollTop || document.body.scrollTop;
+        let rect = dom.getBoundingClientRect();
+        let x = scrollX + dom.getBoundingClientRect().left;
+        let y = scrollY + dom.getBoundingClientRect().top;
+        let height = dom.getBoundingClientRect().height;
+        let width = dom.getBoundingClientRect().width;
+        return { x: x, y: y, height: height, width: width };
+    }
+    function mouseIndom(event) {
+        let mouseMsg = getMousePos(event);
+        let domMsg = getElementPosition('#timg');
+        let flagX = mouseMsg.x > domMsg.x && mouseMsg.x < domMsg.x + domMsg.width;
+        let flagY =
+            mouseMsg.y > domMsg.y && mouseMsg.y < domMsg.y + domMsg.height;
+        if (flagX && flagY) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function isHover(event, obj, val, imgid) {
+        var id = $(obj).attr("attrid");
+        let mouseMsg = getMousePos(event);
+        let domMsg = getElementPosition('#sbinloucengimg' + id + '');
+        let flagX = mouseMsg.x > domMsg.x && mouseMsg.x < domMsg.x + domMsg.width;
+        let flagY =
+            mouseMsg.y > domMsg.y && mouseMsg.y < domMsg.y + domMsg.height;
+        if (flagX && flagY) {
+            sbck(val, imgid)
+            outid = 'sbinloucengimg' + id + '';
+            return true;
+        } else {
+            out('sbinloucengimg' + id + '');
+            return false;
+        }
+    }
+
+    // 文档鼠标移动
+    document.onmousemove = function (event) {
+        INNER = mouseIndom(event);
+    };
+    if (window.addEventListener)
+    //FF,火狐浏览器会识别该方法
+        window.addEventListener('DOMMouseScroll', wheel, false);
+    window.onmousewheel = document.onmousewheel = wheel; //W3C
+    //统一处理滚轮滚动事件
+    function wheel(event) {
+    	console.log("滚轮滑动")
+    	INNER = mouseIndom(event);
+        var delta = 0;
+        if (!event) event = window.event;
+        if (event.wheelDelta) {
+            //IE、chrome浏览器使用的是wheelDelta，并且值为“正负120”
+            delta = event.wheelDelta / 120;
+            if (window.opera) delta = -delta; //因为IE、chrome等向下滚动是负值，FF是正值，为了处理一致性，在此取反处理
+        } else if (event.detail) {
+            //FF浏览器使用的是detail,其值为“正负3”
+            delta = -event.detail / 3;
+        }
+        if (delta) handle(delta, event);
+    }
+    //上下滚动时的具体处理函数
+    var time = 1;
+	function handle(delta, event) { 
+		var timg = $("#timg");
+	    var naturalWidth  = timg.attr('initWidth')  * 1;
+	    var naturalHeight = timg.attr('initHeight') * 1;
+	    var currentWidth  = timg.width();
+	    var currentHeight = timg.height();
+	    var scale         = timg.attr('scale') * 1;
+	    
+		if (INNER) {
+			if (delta < 0) {
+				//向下滚动
+				scale = scale - step;
+				var oldWidth  = $("#timg").width();
+				var oldHeight = $("#timg").height();
+				if (oldWidth <= 800 || oldHeight <= 500)
+					return; 
+				var newWidth  = oldWidth  -  oldWidth * step;
+				var newHeight = $("#timg").height() * (1 - step); 
+				var obj = $('#timg');
+				obj.css("width", newWidth + "px");
+				obj.css("height", newHeight + "px");
+				timg.attr('scale', scale);
+				
+				var $d = $(document);
+	            var imgLeft = Math.min(obj.css("left").split('px')[0], 0);//
+	            var maxWidth = $d.width()  - $('#left_content').width() - obj.width();
+	            if(obj.width() < $d.width() - $('#left_content').width()){
+	            	imgLeft = 0;
+	            }  else  if(imgLeft < maxWidth){// 高度大于时，底部距离不能留白
+	            	imgLeft = maxWidth;
+	            } 
+	            obj[0].style.left = imgLeft + 'px';
+	            
+	            var imgTop = Math.min(obj.css("top").split('px')[0], 0);//
+	            var maxTop = $d.height()  - $('#head').height() - obj.height();
+	            if($d.height()  - $('#head').height() > obj.height()){
+	            	imgTop = 0;
+	            }  else  if(imgTop < maxTop){// 高度大于时，底部距离不能留白
+	            	imgTop = maxTop;
+	            } 
+	            obj[0].style.top  = imgTop + 'px';
+				
+				refushLocation(oldHeight);
+				/* var loucengImg = $(".sbinloucengimg");
+				var louceng = $(".sbinlouceng");
+				var tips = $(".tipssanjiao");
+				var dev_popuo = $("#dev_popuo");
+				console.log("文本框",dev_popuo);
+				//获取底图的offsetleft的值
+				var dituLeft = document.getElementById('timg').offsetLeft;
+				var dituTop = document.getElementById('timg').offsetTop;
+				console.log(document.getElementById('timg').offsetLeft,document.getElementById('timg').offsetTop);
+				console.log(dituLeft,dituTop)
+				//把设备图标距离上面的距离作为标准
+				var equipmentTop = [];
+				var lestp = 54;
+				var topp = 100;
+				$.each(loucengImg, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					console.log(item.offsetLeft,item.offsetTop)
+					if (dituLeft == 0)
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp +"px" })
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 0.99 + dituLeft * 0.01 -lestp*0.01+ "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 0.99 + dituLeft-lestp*0.01 + "px" })
+
+					if (dituTop == 0) {
+						$(item).css({ top: newHeight * ((item.offsetTop+topp) / oldHeight) - topp  + "px" })
+						equipmentTop.push(newHeight * ((item.offsetTop+topp+10) / oldHeight) - topp);
+					}
+					else if (dituTop < 0) {
+						console.log("楼层图左移")
+						$(item).css({ top: item.offsetTop * 0.99 + dituTop * 0.01-topp*0.01 + "px" })
+						equipmentTop.push(item.offsetTop * 0.99 + dituTop * 0.01-topp*0.01+10);
+					}
+					else {
+						$(item).css({ top: (item.offsetTop - dituTop) * 0.99 + dituTop-topp*0.01 + "px" });
+						equipmentTop.push((item.offsetTop - dituTop) * 0.99 + dituTop-topp*0.01);
+					}
+				})
+				$.each(louceng, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					if (dituLeft == 0)
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp +"px" })
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 0.99 + dituLeft * 0.01-lestp*0.01 + "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 0.99 + dituLeft-lestp*0.01 + "px" })
+					if (dituTop == 0)
+						$(item).css({ top: equipmentTop[index] - 50 + "px" })
+					else if (dituTop < 0)
+						$(item).css({ top: equipmentTop[index] - 50 + "px" })
+					else
+						$(item).css({ top: equipmentTop[index] - 50 + "px" });
+				})
+				$.each(tips, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					if (dituLeft == 0)
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp +"px" })
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 0.99 + dituLeft * 0.01-lestp*0.01 + "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 0.99 + dituLeft-lestp*0.01 + "px" })
+					if (dituTop == 0)
+						$(item).css({ top: equipmentTop[index] - 33 + "px" })
+					else if (dituTop < 0)
+						$(item).css({ top: equipmentTop[index] - 33 + "px" })
+					else
+						$(item).css({ top: equipmentTop[index] - 33 + "px" });
+				}) */
+			} else {
+				//向上滚动
+				console.log('向上滚动');
+				scale = scale + step;
+				// document.querySelector('#timg').style.webkitTransform = 'scale(' + scale + ')';
+				// document.querySelector('#timg').innerText = '放大了' + scale;
+				// $("#16").css({ left: parseFloat($("#16").css("left").replace("px", "")) * scale, top: parseFloat($("#16").css("top").replace("px", "")) * scale })
+				var oldWidth =  $("#timg").width();
+				var oldHeight = $("#timg").height();
+				/* var newWidth  = oldWidth  + oldWidth  * step;
+				var newHeight = oldHeight + oldHeight * step; */
+			    var newWidth  = oldWidth  + oldWidth  * step;
+				var newHeight = $("#timg").height() * (1 + step); 
+				$('#timg').css("width", newWidth + "px");
+				$('#timg').css("height", newHeight + "px");
+				timg.attr('scale', scale);
+				refushLocation(oldHeight);
+				/* var wScale = newWidth / oldWidth;
+				var hScale = newHeight / oldHeight;
+				scaleX = newWidth / oldWidth;
+				scaleY = newHeight / oldHeight;
+				var loucengImg = $(".sbinloucengimg");
+				var louceng = $(".sbinlouceng");
+				var tips = $(".tipssanjiao");
+				//获取底图的offsetleft的值
+				var dituLeft = document.getElementById('timg').offsetLeft;
+				var dituTop = document.getElementById('timg').offsetTop;
+				//把设备图标距离上面的距离作为标准
+				var equipmentTop = [];
+				var lestp = 54;
+				var topp = 100;
+				$.each(loucengImg, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					console.log(item.offsetLeft,item.offsetTop);
+					if (dituLeft == 0){
+						// console.log("滚轮放大")
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp+ "px" })//范例
+					}
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 1.01 + lestp * 0.01 - dituLeft * 0.01 + "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 1.01+ lestp * 0.01 + dituLeft + "px" })
+
+					if (dituTop == 0) {
+						$(item).css({ top: newHeight * ((item.offsetTop+topp) / oldHeight) - topp + "px" })//范例
+						equipmentTop.push(newHeight * ((item.offsetTop+topp) / oldHeight) - topp);
+					}
+					else if (dituTop < 0) {
+						$(item).css({ top: item.offsetTop * 1.01 - dituTop * 0.01+topp*0.01 + "px" })
+						equipmentTop.push(item.offsetTop * 1.01 + 40 * 0.01 - dituTop * 0.01+topp*0.01);
+					}
+					else {
+						$(item).css({ top: (item.offsetTop - dituTop) * 1.01 + dituTop+topp*0.01 + "px" });
+						equipmentTop.push((item.offsetTop - dituTop) * 1.01 + dituTop+topp*0.01);
+					}
+				})
+				$.each(louceng, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					if (dituLeft == 0)
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp+ "px" })//范例
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 1.01 + + lestp * 0.01 - dituLeft * 0.01 + "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 1.01 + dituLeft+ lestp * 0.01 + "px" })
+
+
+					if (dituTop == 0)
+						$(item).css({ top: equipmentTop[index] - 50 + "px" })
+					else if (dituTop < 0)
+						$(item).css({ top: equipmentTop[index] - 50 + "px" })
+					else
+						$(item).css({ top: equipmentTop[index] - 50 + "px" });
+				})
+				$.each(tips, function (index, item) {
+					//如果是负的 就是直接当前元素的offsetleft值乘以百分比
+					if (dituLeft == 0)
+						$(item).css({ left: newWidth * ((item.offsetLeft+lestp) / oldWidth)-lestp+ "px" })//范例
+					else if (dituLeft < 0)
+						$(item).css({ left: item.offsetLeft * 1.01 + lestp * 0.01  - dituLeft * 0.01 + "px" })
+					else
+						$(item).css({ left: (item.offsetLeft - dituLeft) * 1.01+ lestp * 0.01  + dituLeft + "px" })
+
+
+					if (dituTop == 0)
+						$(item).css({ top: equipmentTop[index] - 33 + "px" })
+					else if (dituTop < 0)
+						$(item).css({ top: equipmentTop[index] - 33 + "px" })
+					else
+						$(item).css({ top: equipmentTop[index] - 33 + "px" });
+				}) */
+
+			}
+
+			// event.preventDefault();
+			// event.stopPropagation();
+			return;
+		}
+	}
+
+	//wk  --start
+    function getOnclickList(){
+        var str=$("#loucengall").html();
+        //var str = '<tr><td id="39" onclick="query(&quot;39&quot;)" style="cursor: pointer; border: 1px solid rgb(0, 82, 171); color: rgb(227, 28, 20);">厂区平面图</td></tr><tr><td id="56" onclick="query(&quot;56&quot;)" style="cursor: pointer;border: 1px solid #0052ab">液化石油气储配站</td></tr><tr><td id="69" onclick="query(&quot;69&quot;)" style="cursor: pointer;border: 1px solid #0052ab">三楼</td></tr><tr style="height:45px"><td></td></tr><tr style="height:45px"><td></td></tr>';
+        var flag = true;
+        var end = 0;
+        var start = 0;
+        var result = '';
+        var query = '';
+        var eventList = [];
+
+        while(flag){
+            start = str.indexOf("query");
+            if(start != -1){
+                result = str.substring(start, str.length);
+                end = result.indexOf(")") + 1;
+                query = result.substring(0, end);
+                str = result.substring(end, result.length);
+                eventList.push(query);
+            } else {
+                flag = false;
+            }
+        }
+        return eventList
+
+
+    }
+
+    /* var count = getOnclickList().length;
+    var clickTime = 0;
+    var queryClick = '';
+    function prevPage(){
+        var eventList = getOnclickList();
+        if(count > 1){
+            count--;
+            console.log("下一页:"+ count)
+            clickTime++;
+            queryClick = eventList[clickTime];
+            queryClick=queryClick.replace(/&quot;/ig, "\"");
+            eval(queryClick)
+        } else {
+            clickTime = 0;
+            count = getOnclickList().length;
+            queryClick = eventList[clickTime];
+            queryClick=queryClick.replace(/&quot;/ig, "\"");
+            eval(queryClick)
+        }
+    }
+
+    function nextPage(){
+        var eventList = getOnclickList();
+        if(count <= getOnclickList().length){
+            count++;
+            if(clickTime !== 0){
+                clickTime--;
+                queryClick = eventList[clickTime];
+                queryClick=queryClick.replace(/&quot;/ig, "\"");
+                eval(queryClick)
+            } else {
+                clickTime = getOnclickList().length - 1;
+                queryClick = eventList[clickTime];
+                queryClick=queryClick.replace(/&quot;/ig, "\"");
+                eval(queryClick)
+            }
+           
+        } else {
+            count = getOnclickList().length - 1;
+        }
+    } */
+    //wk --end
+</script>
+</body>
+
+</html>

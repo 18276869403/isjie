@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="org.jeecg.modules.demo.monitor.mapper.TestRecordMapper">
+    <!-- <insert id="addTest">
+		insert into test_record
+		(Test_iccId,Test_deviceImei,Test_Address,T_status,Test_pv,Acquisition_time, oneAreaId, twoAreaId, deviceId, customerId, backUp5, create_time)
+		VALUES
+		(#{iccid},#{imei},#{add},#{status},#{pv},#{time}, #{oneAreaId}, #{twoAreaId}, #{deviceId}, #{customerId}, #{dataTime}, now());
+	</insert> -->
+    <insert id="addTest" parameterType="java.util.List">
+		insert into test_record
+		(Test_iccId,Test_deviceImei,Test_Address,T_status,Test_pv,Acquisition_time, oneAreaId, twoAreaId, deviceId, customerId, backUp5, create_time, out_status)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+		(#{item.iccid},#{item.imei},#{item.add},#{item.status},#{item.pv},#{item.time}, #{item.oneAreaId}, #{item.twoAreaId}, #{item.deviceId}, #{item.customerId}, #{item.dataTime}, now(), #{item.outStatus})
+ 		</foreach>
+	</insert>
+	
+    <select id="queryFloorDetector"
+		resultType="org.jeecg.modules.demo.monitor.vo.TestRecordVo">
+		select id, Acquisition_time acquisitionTime,
+		test_pv testPv
+		from test_record where (Test_deviceImei=#{deviceImei} and
+		Test_address=#{addressNumber})order by
+		id desc limit 0,1
+
+	</select>
+</mapper>
